@@ -19,6 +19,7 @@ from bcloud import gutil
 from bcloud.log import logger
 from bcloud import pcs
 from bcloud import util
+from bcloud import magnet
 
 
 (TASKID_COL, NAME_COL, PATH_COL, SOURCEURL_COL, SIZE_COL, FINISHED_COL,
@@ -371,6 +372,12 @@ class CloudPage(Gtk.Box):
         box.show_all()
         response = dialog.run()
         contents = gutil.text_buffer_get_all_text(links_buf)
+        print(contents)
+        try:
+            magList = getAllMagnet(contents)
+        except:
+            print("get url failed")
+        print(magList)
         dialog.destroy()
         if response != Gtk.ResponseType.OK or not contents:
             return

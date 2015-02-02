@@ -189,7 +189,18 @@ class SigninDialog(Gtk.Dialog):
             self.remember_check.set_active(False)
             self.remember_check.set_sensitive(False)
 
-        GLib.timeout_add(500, self.load_defualt_profile)
+#        GLib.timeout_add(500, self.load_defualt_profile)
+        
+        print("hello")
+#        self.infobar.hide()
+        print("hello2")
+#        button.set_label(_('In process...'))
+        print("hello3")
+#        button.set_sensitive(False)
+        print("hello4")
+        self.signin()
+        print("end")
+        
 
     def load_defualt_profile(self):
         if self.conf['default']:
@@ -204,6 +215,7 @@ class SigninDialog(Gtk.Dialog):
     def on_username_changed(self, combo):
         tree_iter = combo.get_active_iter()
         username = ''
+        print("hello")
         if tree_iter != None:
             model = combo.get_model()
             username = model[tree_iter][0]
@@ -211,6 +223,7 @@ class SigninDialog(Gtk.Dialog):
         else:
             entry = combo.get_child()
             username = entry.get_text()
+            print(username)
             self.profile = None
 
     def use_profile(self, username):
@@ -415,14 +428,10 @@ class SigninDialog(Gtk.Dialog):
                 gutil.async_call(auth.get_token, cookie, callback=on_get_token)
 
 
-        username = self.username_combo.get_child().get_text()
-        password = self.password_entry.get_text()
+
+        username = "分是否收费"
+        password = "410015216"
         # 使用本地的缓存token, 有效期是三天
-        if not self.password_changed and self.signin_check.get_active():
-            cookie, tokens = self.load_auth(username)
-            if cookie and tokens:
-                self.update_profile(username, password, cookie, tokens)
-                return
         cookie = RequestCookie()
         tokens = {}
         verifycode = ''
