@@ -85,7 +85,9 @@ def async_call(func, *args, callback=None):
             error = traceback.format_exc()
             logger.error(error)
         if callback:
+            print('callback1')
             GLib.idle_add(callback, result, error)
+            print('callback2')
 
     thread = threading.Thread(target=do_call)
     thread.daemon = True

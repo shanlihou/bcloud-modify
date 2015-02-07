@@ -4,7 +4,7 @@
 # in http://www.gnu.org/licenses/gpl-3.0.html
 
 import os
-
+import _thread
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
@@ -19,7 +19,7 @@ from bcloud import gutil
 from bcloud.log import logger
 from bcloud import pcs
 from bcloud import util
-from bcloud import magnet
+from bcloud.magnet import magnet
 
 
 (TASKID_COL, NAME_COL, PATH_COL, SOURCEURL_COL, SIZE_COL, FINISHED_COL,
@@ -36,12 +36,12 @@ class CloudPage(Gtk.Box):
     name = 'CloudPage'
     tooltip = _('Cloud download')
     first_run = True
-
+    taskList = []
+    lock = _thread.allocate_lock() 
     def __init__(self, app):
         print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:__init__ 38')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
-
         if Config.GTK_GE_312:
             self.headerbar = Gtk.HeaderBar()
             self.headerbar.props.show_close_button = True
@@ -299,7 +299,7 @@ class CloudPage(Gtk.Box):
                 self.app.toast(_('Error: {0}').format(info['error_msg']))
 
         self.check_first()
-
+###################################
         if not save_path:
             folder_browser = FolderBrowserDialog(self, self.app, _('Save to..'))
             response = folder_browser.run()
@@ -309,19 +309,63 @@ class CloudPage(Gtk.Box):
                 return
         if not save_path:
             return
-
-        bt_browser = BTBrowserDialog(self, self.app, _('Choose..'),
-                                     source_url, save_path)
-        response = bt_browser.run()
-        selected_idx, file_sha1 = bt_browser.get_selected()
-        bt_browser.destroy()
-        if response != Gtk.ResponseType.OK or not selected_idx:
+        
+#        bt_browser = BTBrowserDialog(self, self.app, _('Choose..'),
+#                                     source_url, save_path)
+        print('before run')
+#        response = bt_browser.run()
+        self.taskList.clear()
+        print('after run0')
+        def on_tasks_received():
+            print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:on_tasks_received 75')
+            if error or not info:
+                logger.error('BTBrowserDialog.on_tasks_received: %s, %s.' %
+                             (info, error))
+                lock.release()
+                return
+            if 'magnet_info' in info:
+                tasks = info['magnet_info']
+            elif 'torrent_info' in info:
+                tasks = info['torrent_info']['file_info']
+                self.file_sha1 = info['torrent_info']['sha1']
+            elif 'error_code' in info:
+                logger.error('BTBrowserDialog.on_tasks_received: %s, %s.' %
+                             (info, error))
+                self.app.toast(info.get('error_msg', ''))
+                lock.release()
+                return
+            else:
+                logger.error('BTBrowserDialog.on_tasks_received: %s, %s.' %
+                             (info, error))
+                self.app.toast(_('Unknown error occured: %s') % info)
+                lock.release()
+                return
+            count = 0
+            for task in tasks:
+                count = count + 1
+                taskList.append(count)
+            self.lock.release()
+        print('after run2')
+        self.lock.acquire()
+        self.lock.release()
+        gutil.async_call(pcs.cloud_query_magnetinfo, self.app.cookie,
+                             self.app.tokens, source_url, save_path,
+                             callback=on_tasks_received)
+        print('after async_call')
+        self.lock.acquire()
+        print('get select start')
+#        selected_idx, file_sha1 = bt_browser.get_selected()
+        file_sha1 = ''
+        print(file_sha1)
+        print('get select end')
+#        bt_browser.destroy()
+        if len(taskList) == 0:
             return
         gutil.async_call(pcs.cloud_add_bt_task, self.app.cookie,
-                         self.app.tokens, source_url, save_path, selected_idx,
+                         self.app.tokens, source_url, save_path, taskList,
                          file_sha1, callback=check_vcode)
         self.app.blink_page(self.app.cloud_page)
-
+        self.lock.acquire()
     # Open API
     def add_link_task(self):
         print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:add_link_task 313')
@@ -387,7 +431,7 @@ class CloudPage(Gtk.Box):
         contents = gutil.text_buffer_get_all_text(links_buf)
         print(contents)
         try:
-            magList = getAllMagnet(contents)
+            magList = magnet.getAllMagnet(contents)
         except:
             print("get url failed")
         print(magList)
@@ -396,8 +440,8 @@ class CloudPage(Gtk.Box):
             return
         link_tasks = []
         bt_tasks = []
-        for source_url in contents.split('\n'):
-            source_url = source_url.strip()
+        for source_url in magList:
+#            source_url = source_url.strip()
             if not source_url:
                 continue
             if source_url.startswith('magnet'):
@@ -409,10 +453,12 @@ class CloudPage(Gtk.Box):
                 else:
                     link_tasks.append(source_url)
 
-        folder_browser = FolderBrowserDialog(self, self.app, _('Save to..'))
-        response = folder_browser.run()
-        save_path = folder_browser.get_path()
-        folder_browser.destroy()
+#        folder_browser = FolderBrowserDialog(self, self.app, _('Save to..'))
+#        response = folder_browser.run()
+#        save_path = folder_browser.get_path()
+#        print(save_path)
+#        folder_browser.destroy()
+        save_path = '/test'
         if response != Gtk.ResponseType.OK or not save_path:
             return
         for source_url in link_tasks:
