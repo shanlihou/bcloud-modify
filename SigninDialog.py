@@ -17,7 +17,6 @@ from bcloud import gutil
 from bcloud.log import logger
 from bcloud.RequestCookie import RequestCookie
 from bcloud import util
-from bcloud import Widgets
 
 DELTA = 1 * 24 * 60 * 60   # 1 days
 

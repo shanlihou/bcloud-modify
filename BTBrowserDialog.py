@@ -28,6 +28,8 @@ class BTBrowserDialog(Gtk.Dialog):
         source_url - 如果是BT种子的话, 就是种子的绝对路径.
                       如果是磁链的话, 就是以magent:开头的磁链链接.
         '''
+        
+
         super().__init__(title, app.window, Gtk.DialogFlags.MODAL,
                          (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                          Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -98,6 +100,7 @@ class BTBrowserDialog(Gtk.Dialog):
                 human_size = util.get_human_size(size)[0]
                 select = (size > MIN_SIZE_TO_CHECK or 
                           task['file_name'].endswith(CHECK_EXT))
+                print(task['file_name'])
                 self.liststore.append([
                     select,
                     task['file_name'],
