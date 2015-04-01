@@ -27,17 +27,14 @@ SIZE_G = 2 ** 30
 SIZE_T = 2 ** 40
 
 def timestamp():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:timestamp 28')
     '''返回当前的时间标记, 以毫秒为单位'''
     return str(int(time.time() * 1000))
 
 def curr_time():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:curr_time 32')
     now = datetime.datetime.now()
     return datetime.datetime.strftime(now, '%Y%m%d%H%M%S')
 
 def latency():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:latency 36')
     '''返回操作时消耗的时间.
 
     这个值是0.1-1之前的五位小数, 用于跟踪服务器的响应时间.
@@ -46,7 +43,6 @@ def latency():
     return str(random.random())[:7]
 
 def get_human_size(size, use_giga=True):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:get_human_size 44')
     '''将文件大小由byte, 转为人类可读的字符串
     size     -  整数, 文件的大小, 以byte为单位
     use_giga - 如果这个选项为False, 那最大的单位就是MegaBytes, 而不会用到
@@ -65,14 +61,12 @@ def get_human_size(size, use_giga=True):
     return ('{0:.1f} TB'.format(size / SIZE_T), size_kb)
 
 def get_delta_days(from_sec, to_sec):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:get_delta_days 62')
     '''计算两个时间节点之间的日期'''
     seconds = abs(to_sec - from_sec)
     delta = datetime.timedelta(seconds=seconds)
     return delta.days
 
 def get_human_time(t):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:get_human_time 68')
     '''将时间标记转换成字符串'''
     if isinstance(t, int):
         # ignore micro seconds
@@ -82,7 +76,6 @@ def get_human_time(t):
     return datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S')
 
 def get_recent_mtime(t):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:get_recent_mtime 77')
     '''获取更精简的时间.
 
     如果是当天的, 就返回时间; 如果是当年的, 就近回月份和日期; 否则返回完整的时间
@@ -102,7 +95,6 @@ def get_recent_mtime(t):
         return datetime.datetime.strftime(t, '%b %d %Y')
 
 def rec_split_path(path):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:rec_split_path 96')
     '''将一个路径进行分隔, 分别得到每父母的绝对路径及目录名'''
     if len(path) > 1 and path.endswith('/'):
         path = path[:-1]
@@ -118,7 +110,6 @@ def rec_split_path(path):
     return result
 
 def list_remove_by_index(l, index):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:list_remove_by_index 111')
     '''将list中的index位的数据删除'''
     if index < 0 or index >= len(l):
         raise ValueError('index out of range')
@@ -132,13 +123,11 @@ def list_remove_by_index(l, index):
     return l
 
 def uri_to_path(uri):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:uri_to_path 124')
     if not uri or len(uri) < 7:
         return ''
     return urllib.parse.unquote(uri[7:])
 
 def uris_to_paths(uris):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:uris_to_paths 129')
     '''将一串URI地址转为绝对路径, 用于处理桌面程序中的文件拖放'''
     source_paths = []
     for uri in uris:
@@ -148,7 +137,6 @@ def uris_to_paths(uris):
     return source_paths
 
 def natsort(string):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:natsort 138')
     '''按照语言里的意义对字符串进行排序.
 
     这个方法用于替换按照字符编码顺序对字符串进行排序.
@@ -159,7 +147,6 @@ def natsort(string):
     return [int(s) if s.isdigit() else s for s in re.split('(\d+)', string)]
 
 def RSA_encrypt(public_key, message):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:RSA_encrypt 148')
     '''用RSA加密字符串.
 
     public_key - 公钥
@@ -175,7 +162,6 @@ def RSA_encrypt(public_key, message):
     return base64.encodestring(encrypted).decode().replace('\n', '')
 
 def m3u8_to_m3u(pls):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:m3u8_to_m3u 163')
     output = ['#EXTM3U']
     srcs_set = set()
     for line in pls.decode().split('\n'):
@@ -189,7 +175,6 @@ def m3u8_to_m3u(pls):
     return '\n'.join(output)
 
 def json_loads_single(s):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:json_loads_single 176')
     '''处理不标准JSON结构化数据'''
     try:
         return json.loads(s.replace("'", '"').replace('\t', ''))
@@ -198,7 +183,6 @@ def json_loads_single(s):
         return None
 
 def validate_pathname(filepath):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/util.py:validate_pathname 184')
     '''检查路径中是否包含特殊字符.
 
     百度网盘对路径/文件名的要求很严格:

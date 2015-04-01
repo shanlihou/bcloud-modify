@@ -17,7 +17,6 @@ from bcloud import net
 class VCodeDialog(Gtk.Dialog):
 
     def __init__(self, parent, app, info):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/VCodeDialog.py:__init__ 18')
         super().__init__(_('Verification..'), app.window,
                          Gtk.DialogFlags.MODAL,
                          (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -45,11 +44,9 @@ class VCodeDialog(Gtk.Dialog):
         box.show_all()
 
     def get_vcode(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/VCodeDialog.py:get_vcode 45')
         return self.entry.get_text()
 
     def update_img(self, request, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/VCodeDialog.py:update_img 48')
         if error or not request:
             # TODO: add a refresh button
             logger.error('VCodeDialog.update_img: %s, %s' % (request, error))

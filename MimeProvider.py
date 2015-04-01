@@ -21,13 +21,11 @@ class MimeProvider:
     _data = {}  # 用于存放pixbuf的容器, 以(file_type, icon_size)为key
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/MimeProvider.py:__init__ 22')
         self.app = app
         # First, load `unknown' icon
         self.get('/foo', False)
 
     def get_mime(self, path, isdir):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/MimeProvider.py:get_mime 27')
         '''猜测文件类型, 根据它的文件扩展名'''
         if isdir:
             file_type = FOLDER
@@ -38,7 +36,6 @@ class MimeProvider:
         return file_type
 
     def get(self, path, isdir, icon_size=ICON_SIZE):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/MimeProvider.py:get 37')
         '''取得一个缩略图.
         
         path - 文件的路径, 可以包括绝对路径, 也可以是文件名.
@@ -69,7 +66,6 @@ class MimeProvider:
             return (pixbuf, file_type)
 
     def get_icon_name(self, path, isdir):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/MimeProvider.py:get_icon_name 67')
         file_type = self.get_mime(path, isdir)
         if file_type in (FOLDER, UNKNOWN):
             return file_type
@@ -80,7 +76,6 @@ class MimeProvider:
             return UNKNOWN
 
     def get_app_img(self, app_info):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/MimeProvider.py:get_app_img 77')
         themed_icon = app_info.get_icon()
         if not themed_icon or isinstance(themed_icon, Gio.FileIcon):
             return None

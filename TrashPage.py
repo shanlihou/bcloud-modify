@@ -35,7 +35,6 @@ class TrashPage(Gtk.Box):
     filelist = []
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:__init__ 36')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
 
@@ -170,19 +169,16 @@ class TrashPage(Gtk.Box):
         remaining_col.set_sort_column_id(REMAINING_COL)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:on_page_show 170')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:check_first 175')
         if self.first_run:
             self.first_run = False
             self.load()
 
     def load(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:load 180')
         self.loading_spin.start()
         self.loading_spin.show_all()
         self.page_num = 1
@@ -191,7 +187,6 @@ class TrashPage(Gtk.Box):
                          self.page_num, callback=self.append_filelist)
 
     def load_next(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:load_next 188')
         self.loading_spin.start()
         self.loading_spin.show_all()
         self.page_num = self.page_num + 1
@@ -199,11 +194,9 @@ class TrashPage(Gtk.Box):
                          self.page_num, callback=self.append_filelist)
 
     def reload(self, *args, **kwds):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:reload 195')
         self.load()
 
     def append_filelist(self, info, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:append_filelist 198')
         self.loading_spin.stop()
         self.loading_spin.hide()
         if not info:
@@ -241,7 +234,6 @@ class TrashPage(Gtk.Box):
             ])
 
     def on_restore_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:on_restore_button_clicked 235')
         selection = self.treeview.get_selection()
         model, tree_paths = selection.get_selected_rows()
         if not tree_paths:
@@ -255,7 +247,6 @@ class TrashPage(Gtk.Box):
         self.app.home_page.reload()
 
     def on_delete_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:on_delete_button_clicked 248')
         selection = self.treeview.get_selection()
         model, tree_paths = selection.get_selected_rows()
         if not tree_paths:
@@ -267,10 +258,8 @@ class TrashPage(Gtk.Box):
                          fidlist, callback=self.reload)
 
     def on_clear_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:on_clear_button_clicked 259')
         gutil.async_call(pcs.clear_trash, self.app.cookie, self.app.tokens,
                          callback=self.reload)
 
     def on_reload_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/TrashPage.py:on_reload_button_clicked 263')
         self.load()

@@ -68,14 +68,12 @@ AVATAR_UPDATE_INTERVAL = 604800  # 用户头像更新频率, 默认是7天
 
 
 def async_call(func, *args, callback=None):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:async_call 69')
     '''Call `func` in background thread, and then call `callback` in Gtk main thread.
 
     If error occurs in `func`, error will keep the traceback and passed to
     `callback` as second parameter. Always check `error` is not None.
     '''
     def do_call():
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:do_call 75')
         result = None
         error = None
 
@@ -92,7 +90,6 @@ def async_call(func, *args, callback=None):
     thread.start()
 
 def xdg_open(uri):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:xdg_open 91')
     '''使用桌面环境中默认的程序打开指定的URI
     
     当然, 除了URI格式之外, 也可以是路径名, 文件名, 比如:
@@ -106,7 +103,6 @@ def xdg_open(uri):
 
 def update_liststore_image(liststore, tree_iters, col, pcs_files, dir_name,
                            icon_size=96):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:update_liststore_image 103')
     '''下载文件缩略图, 并将它显示到liststore里.
     
     pcs_files - 里面包含了几个必要的字段.
@@ -114,7 +110,6 @@ def update_liststore_image(liststore, tree_iters, col, pcs_files, dir_name,
     size      - 指定图片的缩放大小, 默认是96px.
     '''
     def update_image(filepath, tree_iter):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:update_image 111')
         try:
             pix = GdkPixbuf.Pixbuf.new_from_file_at_size(filepath, icon_size,
                                                          icon_size)
@@ -126,7 +121,6 @@ def update_liststore_image(liststore, tree_iters, col, pcs_files, dir_name,
             logger.error(traceback.format_exc())
 
     def dump_image(url, filepath):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:dump_image 122')
         req = net.urlopen(url)
         if not req or not req.data:
             logger.warn('update_liststore_image(), failed to request %s' % url)
@@ -160,7 +154,6 @@ def update_liststore_image(liststore, tree_iters, col, pcs_files, dir_name,
 
 def update_share_image(liststore, tree_iters, col, large_col, pcs_files,
                        dir_name, icon_size, large_icon_size):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:update_share_image 154')
     '''下载文件缩略图, 并将它显示到liststore里.
 
     需要同时更新两列里的图片, 用不同的缩放尺寸.
@@ -168,7 +161,6 @@ def update_share_image(liststore, tree_iters, col, large_col, pcs_files,
     dir_name  - 缓存目录, 下载到的图片会保存这个目录里.
     '''
     def update_image(filepath, tree_iter):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:update_image 162')
         try:
             tree_path = liststore.get_path(tree_iter)
             if tree_path is None:
@@ -185,7 +177,6 @@ def update_share_image(liststore, tree_iters, col, large_col, pcs_files,
             logger.error(traceback.format_exc())
 
     def dump_image(url, filepath):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:dump_image 178')
         req = net.urlopen(url)
         if not req or not req.data:
             logger.warn('update_share_image:, failed to request %s' % url)
@@ -218,7 +209,6 @@ def update_share_image(liststore, tree_iters, col, large_col, pcs_files,
                 GLib.idle_add(update_image, filepath, tree_iter)
 
 def update_avatar(cookie, tokens, dir_name):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:update_avatar 210')
     '''获取用户头像信息'''
     uk = pcs.get_user_uk(cookie, tokens)
     if not uk:
@@ -242,14 +232,12 @@ def update_avatar(cookie, tokens, dir_name):
     return (uk, user_info['uname'], img_path)
 
 def ellipse_text(text, length=10):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:ellipse_text 233')
     if len(text) < length:
         return text
     else:
         return text[:8] + '..'
 
 def load_profile(profile_name):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:load_profile 239')
     '''读取特定帐户的配置信息
 
     有时, dbus会出现连接错误, 这里会进行重试. 但如果超过最大尝试次数, 就
@@ -282,7 +270,6 @@ def load_profile(profile_name):
     return profile
 
 def dump_profile(profile):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:dump_profile 271')
     '''保存帐户的配置信息.
 
     这里会检查用户是否愿意保存密码, 如果需要保存密码的话, 就调用keyring来存
@@ -304,12 +291,10 @@ def dump_profile(profile):
         json.dump(profile, fh)
 
 def reach_scrolled_bottom(adj):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:reach_scrolled_bottom 292')
     '''在ScrolledWindow里面, 滚动到了底部, 就需要尝试载入下一页的内容'''
     return (adj.get_upper() - adj.get_page_size() - adj.get_value()) < 80
 
 def tree_model_natsort(model, row1, row2, user_data=None):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:tree_model_natsort 296')
     '''用natural sorting算法对TreeModel的一个column进行排序'''
     sort_column, sort_type = model.get_sort_column_id()
     value1 = model.get_value(row1, sort_column)
@@ -323,11 +308,9 @@ def tree_model_natsort(model, row1, row2, user_data=None):
         return 1
 
 def escape(tooltip):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:escape 309')
     '''Escape special characters in tooltip text'''
     return GLib.markup_escape_text(tooltip)
 
 def text_buffer_get_all_text(buf):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/gutil.py:text_buffer_get_all_text 313')
     '''Get all text in a GtkTextBuffer'''
     return buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)

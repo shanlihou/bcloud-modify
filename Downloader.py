@@ -34,7 +34,6 @@ SMALL_FILE_SIZE = 1048576 # 1M, 下载小文件时用单线程下载
 BATCH_FINISISHED, BATCH_ERROR = -1, -2
 
 def get_tmp_filepath(dir_name, save_name):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:get_tmp_filepath 35')
     '''返回最终路径名及临时路径名'''
     filepath = os.path.join(dir_name, save_name)
     return filepath, filepath + '.part', filepath + '.bcloud-stat'
@@ -44,7 +43,6 @@ class DownloadBatch(threading.Thread):
 
     def __init__(self, id_, queue, url, lock, start_size, end_size, fh,
                  timeout):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:__init__ 43')
         super().__init__()
         self.id_ = id_
         self.queue = queue
@@ -57,15 +55,12 @@ class DownloadBatch(threading.Thread):
         self.stop_flag = False
 
     def run(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:run 56')
         self.download()
 
     def stop(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:stop 59')
         self.stop_flag = True
 
     def get_req(self, start_size, end_size):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:get_req 62')
         '''打开socket'''
         logger.debug('DownloadBatch.get_req: %s, %s' % (start_size, end_size))
         opener = request.build_opener()
@@ -80,7 +75,6 @@ class DownloadBatch(threading.Thread):
             return None
 
     def download(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:download 76')
         offset = self.start_size
         req = self.get_req(offset, self.end_size)
         if not req:
@@ -136,7 +130,6 @@ class Downloader(threading.Thread, GObject.GObject):
     }
 
     def __init__(self, parent, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:__init__ 131')
         threading.Thread.__init__(self)
         self.daemon = True
         GObject.GObject.__init__(self)
@@ -149,7 +142,6 @@ class Downloader(threading.Thread, GObject.GObject):
         self.row = row[:]
 
     def download(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:download 143')
         row = self.row
         if not os.path.exists(row[SAVEDIR_COL]):
             os.makedirs(row[SAVEDIR_COL], exist_ok=True)
@@ -296,22 +288,18 @@ class Downloader(threading.Thread, GObject.GObject):
                 os.remove(conf_filepath)
 
     def destroy(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:destroy 289')
         '''自毁'''
         self.pause()
 
     def run(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:run 293')
         '''实现了Thread的方法, 线程启动入口'''
         self.download()
 
     def pause(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:pause 297')
         '''暂停下载任务'''
         self.row[STATE_COL] = State.PAUSED
 
     def stop(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Downloader.py:stop 301')
         '''停止下载, 并删除之前下载的片段'''
         self.row[STATE_COL] = State.CANCELED
 

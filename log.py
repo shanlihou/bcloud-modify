@@ -8,7 +8,6 @@ import os
 import sys
 
 def _init_logger(log_level, maxBytes=5*1024*1024, backupCount=5):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/log.py:_init_logger 9')
     log_file = os.path.expanduser('~/.config/bcloud/bcloud.log')
     dir_name = os.path.dirname(log_file)
     if not os.path.exists(dir_name):

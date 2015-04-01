@@ -9,7 +9,6 @@ import traceback
 from bcloud.log import logger
 
 def decode_flashget(link):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/decoder.py:decode_flashget 10')
     try:
         l = base64.decodestring(link[11:len(link)-7].encode()).decode()
     except ValueError:
@@ -18,7 +17,6 @@ def decode_flashget(link):
     return l[10:len(l)-10]
 
 def decode_thunder(link):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/decoder.py:decode_thunder 18')
     # AAhttp://127.0.0.1
     if link.startswith('QUFodHRwOi8vMTI3LjAuMC4'):
         return ''
@@ -30,7 +28,6 @@ def decode_thunder(link):
     return l[2:-2]
 
 def decode_qqdl(link):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/decoder.py:decode_qqdl 29')
     try:
         return base64.decodestring(link[7:].encode()).decode()
     except ValueError:
@@ -44,7 +41,6 @@ _router = {
 }
 
 def decode(link):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/decoder.py:decode 42')
     if not isinstance(link, str) or len(link) < 10:
         logger.error('unknown link: %s' % link)
         return ''

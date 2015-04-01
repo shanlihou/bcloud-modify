@@ -60,7 +60,6 @@ _base_conf = {
 }
 
 def check_first():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:check_first 61')
     '''这里, 要创建基本的目录结构'''
     if not os.path.exists(CONF_DIR):
         os.makedirs(CONF_DIR, exist_ok=True)
@@ -68,7 +67,6 @@ def check_first():
         os.makedirs(CACHE_DIR, exist_ok=True)
 
 def load_conf():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:load_conf 68')
     '''获取基本设定信息, 里面存放着所有可用的profiles, 以及默认的profile'''
     if os.path.exists(_conf_file):
         with open(_conf_file) as fh:
@@ -78,12 +76,10 @@ def load_conf():
         return _base_conf
 
 def dump_conf(conf):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:dump_conf 77')
     with open(_conf_file, 'w') as fh:
         json.dump(conf, fh)
 
 def get_cache_path(profile_name):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:get_cache_path 81')
     '''获取这个帐户的缓存目录, 如果不存在, 就创建它'''
     path = os.path.join(CACHE_DIR, profile_name, 'cache')
     if not os.path.exists(path):
@@ -91,7 +87,6 @@ def get_cache_path(profile_name):
     return path
 
 def get_tmp_path(profile_name):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:get_tmp_path 88')
     '''获取这个帐户的临时文件目录, 可以存放验证码图片, 上传时的文件分片等'''
     path = os.path.join(CACHE_DIR, profile_name, 'tmp')
     if not os.path.exists(path):
@@ -99,7 +94,6 @@ def get_tmp_path(profile_name):
     return path
 
 def load_color_schema():
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/Config.py:load_color_schema 95')
     if not os.path.exists(COLOR_SCHEMA):
         return []
     with open(COLOR_SCHEMA) as fh:

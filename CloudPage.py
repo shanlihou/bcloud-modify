@@ -37,7 +37,6 @@ class CloudPage(Gtk.Box):
     first_run = True
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:__init__ 38')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
 
@@ -168,22 +167,18 @@ class CloudPage(Gtk.Box):
         percent_col.set_sort_column_id(PERCENT_COL)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_page_show 168')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:check_first 173')
         if self.first_run:
             self.first_run = False
             self.load()
 
     def load(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:load 178')
         '''获取当前的离线任务列表'''
         def on_list_task(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_list_task 180')
             self.loading_spin.stop()
             self.loading_spin.hide()
             if not info:
@@ -220,12 +215,10 @@ class CloudPage(Gtk.Box):
                          start, callback=on_list_task)
 
     def reload(self, *args, **kwds):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:reload 216')
         self.liststore.clear()
         self.load()
 
     def get_row_by_task_id(self, task_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:get_row_by_task_id 220')
         '''返回这个任务的TreeModelRow, 如果不存在, 就返回None.'''
         for row in self.liststore:
             if row and row[TASKID_COL] == task_id:
@@ -233,10 +226,8 @@ class CloudPage(Gtk.Box):
         return None
 
     def scan_tasks(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:scan_tasks 227')
         '''定期获取离线下载任务的信息, 比如10秒钟'''
         def update_task_status(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:update_task_status 229')
             if error or not info:
                 logger.error('CloudPage.scan_tasks: %s, %s' % (info, error))
                 return
@@ -267,14 +258,12 @@ class CloudPage(Gtk.Box):
 
     # Open API
     def add_cloud_bt_task(self, source_url, save_path=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:add_cloud_bt_task 259')
         '''从服务器上获取种子, 并建立离线下载任务
 
         source_url - BT 种子在服务器上的绝对路径, 或者是磁链的地址.
         save_path  - 要保存到的路径, 如果为None, 就会弹出目录选择的对话框
         '''
         def check_vcode(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:check_vcode 265')
             if error or not info:
                 logger.error('CloudPage.check_vcode: %s, %s' % (info, error))
                 return
@@ -323,11 +312,9 @@ class CloudPage(Gtk.Box):
 
     # Open API
     def add_link_task(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:add_link_task 313')
         '''新建普通的链接任务'''
         def do_add_link_task(source_url):
             def on_link_task_added(info, error=None):
-                print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_link_task_added 315')
                 if error or not info:
                     logger.error('CloudPage.do_add_link_task: %s, %s' %
                                  (info, error))
@@ -415,19 +402,15 @@ class CloudPage(Gtk.Box):
 
 
     def on_bt_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_bt_button_clicked 402')
         self.add_local_bt_task()
 
     def on_link_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_link_button_clicked 405')
         self.add_link_task()
 
     def on_reload_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_reload_button_clicked 408')
         self.reload()
 
     def on_open_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_open_button_clicked 411')
         model, tree_paths = self.selection.get_selected_rows()
         # tree_paths might be None or a list
         if not tree_paths or len(tree_paths) != 1:
@@ -440,7 +423,6 @@ class CloudPage(Gtk.Box):
 
     def on_remove_button_clicked(self, button):
         def on_task_removed(resp, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_task_removed 422')
             self.reload()
         model, tree_paths = self.selection.get_selected_rows()
         if not tree_paths or len(tree_paths) != 1:
@@ -458,7 +440,6 @@ class CloudPage(Gtk.Box):
 
     def on_clear_button_clicked(self, button):
         def on_clear_task(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CloudPage.py:on_clear_task 438')
             self.reload()
 
         gutil.async_call(pcs.cloud_clear_task, self.app.cookie,

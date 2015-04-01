@@ -58,7 +58,6 @@ class IconWindow(Gtk.ScrolledWindow):
     ICON_SIZE = 64
 
     def __init__(self, parent, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:__init__ 59')
         super().__init__()
         self.parent = parent
         self.app = app
@@ -72,7 +71,6 @@ class IconWindow(Gtk.ScrolledWindow):
         self.init_ui()
 
     def init_ui(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:init_ui 72')
         self.iconview = Gtk.IconView(model=self.liststore)
         self.iconview.set_pixbuf_column(PIXBUF_COL)
         self.iconview.set_text_column(NAME_COL)
@@ -93,18 +91,15 @@ class IconWindow(Gtk.ScrolledWindow):
         self.liststore.set_sort_func(NAME_COL, gutil.tree_model_natsort)
 
     def load(self, pcs_files):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:load 92')
         '''载入一个目录并显示里面的内容.'''
         self.liststore.clear()
         self.display_files(pcs_files)
 
     def load_next(self, pcs_files):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:load_next 97')
         '''当滚动条向下滚动到一定位置时, 调用这个方法载入下一页'''
         self.display_files(pcs_files)
 
     def display_files(self, pcs_files):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:display_files 101')
         '''重新格式化一下文件列表, 去除不需要的信息
 
         这一操作主要是为了便于接下来的查找工作.
@@ -133,17 +128,14 @@ class IconWindow(Gtk.ScrolledWindow):
                          self.ICON_SIZE)
 
     def get_pcs_file(self, tree_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:get_pcs_file 129')
         '''获取原始的pcs文件信息'''
         return json.loads(self.liststore[tree_path][PCS_FILE_COL])
 
     def on_scrolled(self, adj):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_scrolled 133')
         if gutil.reach_scrolled_bottom(adj) and self.parent.has_next:
             self.parent.load_next()
 
     def on_drag_data_get(self, widget, context, data, info, time):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_drag_data_get 137')
         '''拖放开始'''
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
@@ -162,7 +154,6 @@ class IconWindow(Gtk.ScrolledWindow):
             data.set_uris([])
 
     def on_drag_data_received(self, widget, context, x, y, data, info, time):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_drag_data_received 155')
         '''拖放结束'''
         if not data:
             return
@@ -187,7 +178,6 @@ class IconWindow(Gtk.ScrolledWindow):
                          callback=self.parent.reload)
 
     def on_iconview_item_activated(self, iconview, tree_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_iconview_item_activated 179')
         path = self.liststore[tree_path][PATH_COL]
         type_ = self.liststore[tree_path][TYPE_COL]
         if type_ == 'folder':
@@ -196,7 +186,6 @@ class IconWindow(Gtk.ScrolledWindow):
             self.launch_app(tree_path)
 
     def on_iconview_button_pressed(self, iconview, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_iconview_button_pressed 187')
         if (event.type != Gdk.EventType.BUTTON_PRESS or
                 event.button != Gdk.BUTTON_SECONDARY):
             return False
@@ -217,7 +206,6 @@ class IconWindow(Gtk.ScrolledWindow):
         return True
 
     def popup_folder_menu(self, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:popup_folder_menu 207')
         # create folder; upload files; reload; share; properties
         menu = Gtk.Menu()
         self.menu = menu
@@ -253,11 +241,9 @@ class IconWindow(Gtk.ScrolledWindow):
         menu.popup(None, None, None, None, event.button, event.time)
 
     def popup_item_menu(self, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:popup_item_menu 242')
         # 要检查选中的条目数, 如果选中多个, 只显示出它们共有的一些菜单项:
         # share; rename; delete; copy to; move to; download;
         def build_app_menu(menu, menu_item, app_info):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:build_app_menu 245')
             menu_item.set_always_show_image(True)
             img = self.app.mime.get_app_img(app_info)
             if img:
@@ -390,25 +376,20 @@ class IconWindow(Gtk.ScrolledWindow):
 
     # current folder popup menu
     def on_new_folder_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_new_folder_activated 377')
         dialog = NewFolderDialog(self.parent, self.app, self.parent.path)
         dialog.run()
         dialog.destroy()
 
     def on_upload_files_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_upload_files_activated 382')
         self.app.upload_page.add_file_task(self.parent.path)
 
     def on_upload_folders_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_upload_folders_activated 385')
         self.app.upload_page.add_folder_task(self.parent.path)
 
     def on_reload_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_reload_activated 388')
         self.parent.reload()
 
     def launch_app(self, tree_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:launch_app 391')
         '''用默认的程序打开这个文件链接.'''
         file_type = self.liststore[tree_path][TYPE_COL]
         app_infos = Gio.AppInfo.get_recommended_for_type(file_type)
@@ -419,7 +400,6 @@ class IconWindow(Gtk.ScrolledWindow):
 
     def launch_app_with_app_info(self, app_info):
         def open_video_link(red_url, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:open_video_link 400')
             '''得到视频最后地址后, 调用播放器直接播放'''
             if error or not red_url:
                 logger.error('IconWindow.launch_app_with_app_info: %s, %s' %
@@ -428,7 +408,6 @@ class IconWindow(Gtk.ScrolledWindow):
             gutil.async_call(app_info.launch_uris, [red_url, ], None)
 
         def save_playlist(pls, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:save_playlist 408')
             '''先保存播放列表到临时目录, 再调用播放器直接打开这个播放列表
 
             如果pls为None的话, 说明没能得到播放列表, 这时就需要使用之前的方
@@ -472,11 +451,9 @@ class IconWindow(Gtk.ScrolledWindow):
 
     # item popup menu
     def on_launch_app_activated(self, menu_item, app_info):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_launch_app_activated 451')
         self.launch_app_with_app_info(app_info)
 
     def on_choose_app_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_choose_app_activated 454')
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths or len(tree_paths) != 1:
             return
@@ -492,27 +469,23 @@ class IconWindow(Gtk.ScrolledWindow):
         self.launch_app_with_app_info(app_info)
 
     def on_open_dir_item_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_open_dir_item_activated 469')
         tree_paths = self.iconview.get_selected_items()
         if tree_paths and len(tree_paths) == 1:
             self.parent.load(self.liststore[tree_paths[0]][PATH_COL])
 
     def on_upload_files_dir_item_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_upload_files_dir_item_activated 474')
         tree_paths = self.iconview.get_selected_items()
         if tree_paths and len(tree_paths) == 1:
             self.app.upload_page.add_file_task(
                     self.liststore[tree_paths[0]][PATH_COL])
 
     def on_upload_folders_dir_item_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_upload_folders_dir_item_activated 480')
         tree_paths = self.iconview.get_selected_items()
         if tree_paths and len(tree_paths) == 1:
             self.app.upload_page.add_folder_task(
                     self.liststore[tree_paths[0]][PATH_COL])
 
     def on_cloud_download_item_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_cloud_download_item_activated 486')
         '''创建离线下载任务, 下载选中的BT种子.'''
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
@@ -522,7 +495,6 @@ class IconWindow(Gtk.ScrolledWindow):
 
     def on_copy_link_activated(self, menu_item):
         def copy_link_to_clipboard(url, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:copy_link_to_clipboard 494')
             if error or not url:
                 logger.error('IconWindow.on_copy_link_activated: %s, %s' %
                              (url, error))
@@ -539,7 +511,6 @@ class IconWindow(Gtk.ScrolledWindow):
                          callback=copy_link_to_clipboard)
 
     def on_download_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_download_activated 510')
         # 下载文件与下载目录的操作是不相同的.
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
@@ -550,7 +521,6 @@ class IconWindow(Gtk.ScrolledWindow):
 
     def on_share_activated(self, menu_item):
         def on_share(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_share 519')
             if error or not info or info['errno'] != 0:
                 logger.error('IconWindow.on_share_activated: %s, %s' %
                              (info, error))
@@ -569,7 +539,6 @@ class IconWindow(Gtk.ScrolledWindow):
                              fid_list, callback=on_share)
 
     def on_moveto_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_moveto_activated 537')
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
             return
@@ -594,7 +563,6 @@ class IconWindow(Gtk.ScrolledWindow):
                          callback=self.parent.reload)
 
     def on_copyto_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_copyto_activated 561')
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
             return
@@ -619,7 +587,6 @@ class IconWindow(Gtk.ScrolledWindow):
                          callback=self.parent.reload)
 
     def on_rename_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_rename_activated 585')
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
             return
@@ -631,7 +598,6 @@ class IconWindow(Gtk.ScrolledWindow):
         dialog.destroy()
 
     def on_trash_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_trash_activated 596')
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
             return
@@ -644,7 +610,6 @@ class IconWindow(Gtk.ScrolledWindow):
         self.app.trash_page.reload()
 
     def on_props_activated(self, menu_item):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_props_activated 608')
         '''显示选中的文件或者当前目录的属性'''
         tree_paths = self.iconview.get_selected_items()
         if not tree_paths:
@@ -664,12 +629,10 @@ class TreeWindow(IconWindow):
     ICON_SIZE = 24
 
     def __init__(self, parent, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:__init__ 627')
         super().__init__(parent, app)
 
     # Override
     def init_ui(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:init_ui 631')
         self.iconview = Gtk.TreeView(model=self.liststore)
         self.iconview.set_tooltip_column(TOOLTIP_COL)
         self.iconview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
@@ -733,7 +696,6 @@ class TreeWindow(IconWindow):
 
         # Gtk.TreeView.get_path_at_pos() returns (path, column)
         def get_path_at_pos(x, y):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:get_path_at_pos 694')
             selected = Gtk.TreeView.get_path_at_pos(self.iconview, x, y)
             if selected:
                 return selected[0]
@@ -742,7 +704,6 @@ class TreeWindow(IconWindow):
         self.iconview.get_path_at_pos = get_path_at_pos
 
     def on_drag_data_received(self, widget, context, x, y, data, info, time):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/IconWindow.py:on_drag_data_received 702')
         '''拖放结束'''
         if not data:
             return

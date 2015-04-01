@@ -28,7 +28,6 @@ class CategoryPage(Gtk.Box):
     name = 'CategoryPage'
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:__init__ 29')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
 
@@ -118,13 +117,11 @@ class CategoryPage(Gtk.Box):
             nav_bar.pack_start(grid_view_button, False, False, 0)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:on_page_show 118')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:check_first 123')
         if self.first_run:
             self.first_run = False
             if self.app.profile['view-mode'][self.name] == const.ICON_VIEW:
@@ -137,7 +134,6 @@ class CategoryPage(Gtk.Box):
 
     def load(self):
         def on_load(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:on_load 134')
             self.loading_spin.stop()
             self.loading_spin.hide()
             if not info:
@@ -158,7 +154,6 @@ class CategoryPage(Gtk.Box):
 
     def load_next(self):
         def on_load_next(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:on_load_next 153')
             self.loading_spin.stop()
             self.loading_spin.hide()
             if not info:
@@ -183,11 +178,9 @@ class CategoryPage(Gtk.Box):
                          self.category, self.page_num, callback=on_load_next)
 
     def reload(self, *args):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:reload 177')
         self.load()
 
     def on_list_view_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:on_list_view_button_clicked 180')
         if not isinstance(self.icon_window, TreeWindow):
             self.remove(self.icon_window)
             self.icon_window = TreeWindow(self, self.app)
@@ -198,7 +191,6 @@ class CategoryPage(Gtk.Box):
             self.reload()
 
     def on_grid_view_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/CategoryPage.py:on_grid_view_button_clicked 190')
         if isinstance(self.icon_window, TreeWindow):
             self.remove(self.icon_window)
             self.icon_window = IconWindow(self, self.app)

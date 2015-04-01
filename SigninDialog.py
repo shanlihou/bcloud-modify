@@ -26,7 +26,6 @@ class SigninVcodeDialog(Gtk.Dialog):
     '''登陆时的验证码对话框'''
 
     def __init__(self, parent, username, cookie, tokens, codeString, vcodetype):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:__init__ 27')
         super().__init__(_('Verification..'), parent, Gtk.DialogFlags.MODAL)
 
         self.set_default_size(280, 130)
@@ -75,11 +74,9 @@ class SigninVcodeDialog(Gtk.Dialog):
                          callback=self.update_img)
 
     def get_vcode(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:get_vcode 75')
         return self.vcode_entry.get_text()
 
     def update_img(self, req_data, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:update_img 78')
         if error or not req_data:
             self.refresh_vcode()
             logger.error('SigninDialog.update_img: %s, %s' % (req_data, error))
@@ -95,7 +92,6 @@ class SigninVcodeDialog(Gtk.Dialog):
 
     def refresh_vcode(self):
         def _refresh_vcode(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:_refresh_vcode 92')
             if not info or error:
                 logger.error('SigninVcode.refresh_vcode: %s, %s.' %
                              (info, error))
@@ -112,16 +108,13 @@ class SigninVcodeDialog(Gtk.Dialog):
                          self.vcodetype, callback=_refresh_vcode)
 
     def check_entry(self, *args):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:check_entry 108')
         if len(self.vcode_entry.get_text()) == 4:
             self.response(Gtk.ResponseType.OK)
 
     def on_vcode_refresh_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_vcode_refresh_clicked 112')
         self.refresh_vcode()
 
     def on_vcode_confirm_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_vcode_confirm_clicked 115')
         self.check_entry()
 
 
@@ -131,7 +124,6 @@ class SigninDialog(Gtk.Dialog):
     password_changed = False
 
     def __init__(self, app, auto_signin=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:__init__ 124')
         super().__init__(_('Sign in now'), app.window, Gtk.DialogFlags.MODAL)
         self.app = app
         self.auto_signin = auto_signin
@@ -200,7 +192,6 @@ class SigninDialog(Gtk.Dialog):
         GLib.timeout_add(500, self.load_defualt_profile)
 
     def load_defualt_profile(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:load_defualt_profile 192')
         if self.conf['default']:
             self.use_profile(self.conf['default'])
             self.password_changed = False
@@ -211,7 +202,6 @@ class SigninDialog(Gtk.Dialog):
         return False
 
     def on_username_changed(self, combo):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_username_changed 202')
         tree_iter = combo.get_active_iter()
         username = ''
         if tree_iter != None:
@@ -224,7 +214,6 @@ class SigninDialog(Gtk.Dialog):
             self.profile = None
 
     def use_profile(self, username):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:use_profile 214')
         model = self.username_combo.get_model()
         for row in model: 
             if row[0] == username:
@@ -243,7 +232,6 @@ class SigninDialog(Gtk.Dialog):
         self.password_changed = False
 
     def signin_failed(self, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:signin_failed 232')
         if error:
             self.info_label.set_text(error)
         self.infobar.show_all()
@@ -251,11 +239,9 @@ class SigninDialog(Gtk.Dialog):
         self.signin_button.set_label(_('Sign in'))
 
     def on_password_entry_changed(self, entry):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_password_entry_changed 239')
         self.password_changed = True
 
     def on_remember_check_toggled(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_remember_check_toggled 242')
         if button.get_active():
             self.signin_check.set_sensitive(True)
         else:
@@ -266,13 +252,11 @@ class SigninDialog(Gtk.Dialog):
             gutil.dump_profile(self.profile)
 
     def on_signin_check_toggled(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_signin_check_toggled 252')
         if self.profile:
             self.profile['auto-signin'] = self.signin_check.get_active()
             gutil.dump_profile(self.profile)
 
     def on_signin_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_signin_button_clicked 257')
         if (len(self.password_entry.get_text()) <= 1 or
                 not self.username_combo.get_child().get_text()):
             return
@@ -283,7 +267,6 @@ class SigninDialog(Gtk.Dialog):
 
     def signin(self):
         def on_get_bdstoken(bdstoken, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_get_bdstoken 266')
             if error or not bdstoken:
                 logger.error('SigninDialog.on_get_bdstoken: %s, %s' %
                              (bdstoken, error))
@@ -295,7 +278,6 @@ class SigninDialog(Gtk.Dialog):
                                     dump=True)
 
         def on_post_login(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_post_login 277')
             if error or not info:
                 logger.error('SigninDialog.on_post_login: %s, %s' %
                              (info, error))
@@ -351,7 +333,6 @@ class SigninDialog(Gtk.Dialog):
                     self.signin_failed(_('Unknown error, please try again'))
 
         def on_get_public_key(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_get_public_key 332')
             if not info or error:
                 logger.error('SigninDialog.on_get_public_key: %s, %s' %
                              (info, error))
@@ -368,7 +349,6 @@ class SigninDialog(Gtk.Dialog):
                                  codeString, callback=on_post_login)
 
         def on_check_login(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_check_login 348')
             if not info or error:
                 logger.error('SigninDialog.on_check_login: %s, %s' %
                              (info, error))
@@ -398,7 +378,6 @@ class SigninDialog(Gtk.Dialog):
                                      tokens, callback=on_get_public_key)
 
         def on_get_UBI(ubi_cookie, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_get_UBI 377')
             if error or not ubi_cookie:
                 logger.error('SigninDialog.on_getUBI: %s, %s' %
                              (ubi_cookie, error))
@@ -410,7 +389,6 @@ class SigninDialog(Gtk.Dialog):
                                  username, callback=on_check_login)
 
         def on_get_token(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_get_token 388')
             if error or not info:
                 logger.error('SigninDialog.on_get_token: %s, %s' %
                              (info, error))
@@ -426,7 +404,6 @@ class SigninDialog(Gtk.Dialog):
                                  callback=on_get_UBI)
 
         def on_get_BAIDUID(uid_cookie, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:on_get_BAIDUID 403')
             if error or not uid_cookie:
                 logger.error('SigninDialog.on_get_BAIDUID: %s, %s' %
                              (uid_cookie, error))
@@ -456,7 +433,6 @@ class SigninDialog(Gtk.Dialog):
         gutil.async_call(auth.get_BAIDUID, callback=on_get_BAIDUID)
 
     def load_auth(self, username):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:load_auth 432')
         auth_file = os.path.join(Config.get_tmp_path(username), 'auth.json')
         # 如果授权信息被缓存, 并且没过期, 就直接读取它.
         if os.path.exists(auth_file):
@@ -468,13 +444,11 @@ class SigninDialog(Gtk.Dialog):
         return None, None
 
     def dump_auth(self, username, cookie, tokens):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:dump_auth 443')
         auth_file = os.path.join(Config.get_tmp_path(username), 'auth.json')
         with open(auth_file, 'w') as fh:
             json.dump([str(cookie), tokens], fh)
 
     def update_profile(self, username, password, cookie, tokens, dump=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SigninDialog.py:update_profile 448')
         if not self.profile:
             self.profile = gutil.load_profile(username)
         self.profile['username'] = username

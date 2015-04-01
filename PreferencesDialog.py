@@ -13,7 +13,6 @@ _ = Config._
 class PreferencesDialog(Gtk.Dialog):
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:__init__ 14')
         self.app = app
         super().__init__(_('Preferences'), app.window, Gtk.DialogFlags.MODAL,
                          (Gtk.STOCK_CLOSE, Gtk.ResponseType.OK))
@@ -179,51 +178,39 @@ class PreferencesDialog(Gtk.Dialog):
         box.show_all()
 
     def on_dir_update(self, file_button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_dir_update 179')
         dir_name = file_button.get_filename()
         if dir_name:
             self.app.profile['save-dir'] = dir_name
 
     def on_upload_hidden_switch_activate(self, switch, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_upload_hidden_switch_activate 184')
         self.app.profile['upload-hidden-files'] = switch.get_active()
 
     def on_notify_switch_activate(self, switch, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_notify_switch_activate 187')
         self.app.profile['use-notify'] = switch.get_active()
 
     def on_dark_theme_switch_toggled(self, switch, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_dark_theme_switch_toggled 190')
         self.app.profile['use-dark-theme'] = switch.get_active()
 
     def on_status_switch_activate(self, switch, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_status_switch_activate 193')
         self.app.profile['use-status-icon'] = switch.get_active()
 
     def on_stream_switch_activate(self, switch, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_stream_switch_activate 196')
         self.app.profile['use-streaming'] = switch.get_active()
 
     def on_concurr_value_changed(self, concurr_spin):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_concurr_value_changed 199')
         self.app.profile['concurr-tasks'] = concurr_spin.get_value()
 
     def on_segments_value_changed(self, segments_spin):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_segments_value_changed 202')
         self.app.profile['download-segments'] = segments_spin.get_value()
 
     def on_retries_value_changed(self, retries_spin):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_retries_value_changed 205')
         self.app.profile['retries-each'] = retries_spin.get_value()
 
     def on_download_timeout_value_changed(self, download_timeout_spin):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_download_timeout_value_changed 208')
         self.app.profile['download-timeout'] = download_timeout_spin.get_value()
 
     def on_download_mode_changed(self, combo):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_download_mode_changed 211')
         self.app.profile['download-mode'] = combo.get_active()
 
     def on_upload_mode_changed(self, combo):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PreferencesDialog.py:on_upload_mode_changed 214')
         self.app.profile['upload-mode'] = combo.get_active()

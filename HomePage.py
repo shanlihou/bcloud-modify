@@ -34,7 +34,6 @@ class PathBox(Gtk.Box):
     MOUSE_FORWARD_BUTTON = 9
 
     def __init__(self, parent):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:__init__ 35')
         super().__init__(spacing=10)
         self.parent = parent
 
@@ -48,7 +47,6 @@ class PathBox(Gtk.Box):
         self.pack_start(self.path_box, False, False, 0)
 
     def init_history_navigate(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:init_history_navigate 48')
         navigate_box = Gtk.Box()
         navigate_box.get_style_context().add_class(Gtk.STYLE_CLASS_RAISED)
         navigate_box.get_style_context().add_class(Gtk.STYLE_CLASS_LINKED)
@@ -78,21 +76,17 @@ class PathBox(Gtk.Box):
         return back_button, forward_button
 
     def on_back_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_back_button_clicked 77')
         self.history_navigate(True)
 
     def on_forward_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_forward_button_clicked 80')
         self.history_navigate(False)
 
     def clear_buttons(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:clear_buttons 83')
         buttons = self.path_box.get_children()
         for button in buttons:
             self.path_box.remove(button)
 
     def append_button(self, abspath, name):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:append_button 88')
         button = Gtk.Button()
         button.abspath = abspath
         button.set_tooltip_text(name)
@@ -111,11 +105,9 @@ class PathBox(Gtk.Box):
         button.connect('clicked', self.on_button_clicked)
 
     def on_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_button_clicked 106')
         self.parent.load(button.abspath, is_user=True)
 
     def on_button_press(self, window, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_button_press 109')
         if event.button == self.MOUSE_BACK_BUTTON:
             self.history_navigate(True)
         elif event.button == self.MOUSE_FORWARD_BUTTON:
@@ -124,21 +116,18 @@ class PathBox(Gtk.Box):
             return
 
     def history_navigate(self, is_back):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:history_navigate 117')
         path = self.get_history_path(is_back)
 
         if path:
             self.parent.load(path)
 
     def add_view_history(self, abs_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:add_view_history 123')
         logger.debug("add view history: %s", abs_path)
         self.view_history = self.view_history[:self.view_history_pos + 1]
         self.view_history.append(abs_path)
         self.view_history_pos += 1
 
     def get_history_path(self, is_back):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:get_history_path 129')
         length = len(self.view_history)
         if is_back:
             pos = self.view_history_pos -1
@@ -151,15 +140,12 @@ class PathBox(Gtk.Box):
         return path
 
     def can_back(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:can_back 141')
         return self.view_history_pos > 0
 
     def can_forward(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:can_forward 144')
         return self.view_history_pos < (len(self.view_history) - 1)
 
     def set_path(self, path, is_user=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:set_path 147')
         """
         :param bool is_user: this event was fired by user
         """
@@ -189,7 +175,6 @@ class HomePage(Gtk.Box):
     has_next = True
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:__init__ 176')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
 
@@ -340,13 +325,11 @@ class HomePage(Gtk.Box):
             self.pack_start(self.search_entry, False, False, 0)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_page_show 326')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:check_first 331')
         if self.first_run:
             self.first_run = False
             if self.app.profile['view-mode'][self.name] == const.ICON_VIEW:
@@ -359,7 +342,6 @@ class HomePage(Gtk.Box):
 
     # Open API
     def load(self, path='/', is_user=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:load 343')
         self.path = path
         self.page_num = 1
         self.has_next = True
@@ -372,7 +354,6 @@ class HomePage(Gtk.Box):
                          callback=self.app.update_quota)
 
     def on_load(self, info, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_load 355')
         self.loading_spin.stop()
         self.loading_spin.hide()
         if not info:
@@ -385,10 +366,8 @@ class HomePage(Gtk.Box):
         self.icon_window.load(info['list'])
 
     def load_next(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:load_next 367')
         '''载入下一页'''
         def on_load_next(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_load_next 369')
             self.loading_spin.stop()
             self.loading_spin.hide()
             if not info:
@@ -413,12 +392,10 @@ class HomePage(Gtk.Box):
                          self.path, self.page_num, callback=on_load_next)
 
     def reload(self, *args, **kwds):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:reload 393')
         '''重新载入本页面'''
         self.load(self.path)
 
     def do_drag_data_received(self, drag_context, x, y, data, info, time):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:do_drag_data_received 397')
         '''从其它程序拖放目录/文件, 以便上传.
 
         这里, 会直接把文件上传到当前目录(self.path).
@@ -433,7 +410,6 @@ class HomePage(Gtk.Box):
                 self.app.upload_page.upload_files(source_paths, self.path)
 
     def on_search_button_toggled(self, search_button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_search_button_toggled 411')
         status = search_button.get_active()
         self.search_entry.props.visible = status
         if status:
@@ -442,7 +418,6 @@ class HomePage(Gtk.Box):
             self.reload()
 
     def on_list_view_button_clicked(self, list_view_button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_list_view_button_clicked 419')
         if not isinstance(self.icon_window, TreeWindow):
             self.remove(self.icon_window)
             self.icon_window = TreeWindow(self, self.app)
@@ -453,7 +428,6 @@ class HomePage(Gtk.Box):
             self.reload()
 
     def on_grid_view_button_clicked(self, grid_view_button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_grid_view_button_clicked 429')
         if isinstance(self.icon_window, TreeWindow):
             self.remove(self.icon_window)
             self.icon_window = IconWindow(self, self.app)
@@ -464,7 +438,6 @@ class HomePage(Gtk.Box):
             self.reload()
 
     def on_search_entry_activated(self, search_entry):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/HomePage.py:on_search_entry_activated 439')
         text = search_entry.get_text()
         if not text:
             return

@@ -46,7 +46,6 @@ class Uploader(threading.Thread, GObject.GObject):
     is_slice_upload = False
 
     def __init__(self, parent, row, cookie, tokens):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:__init__ 47')
         '''
         parent    - UploadPage
         row       - UploadPage.liststore中的一个记录
@@ -63,7 +62,6 @@ class Uploader(threading.Thread, GObject.GObject):
         self.row = row[:]
 
     def run(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:run 63')
         if self.check_exists() and self.upload_mode == UploadMode.IGNORE:
             self.emit('uploaded', self.row[FID_COL])
             return
@@ -78,21 +76,17 @@ class Uploader(threading.Thread, GObject.GObject):
 
     # Open API
     def pause(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:pause 77')
         self.row[STATE_COL] = State.PAUSED
 
     # Open API
     def stop(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:stop 81')
         self.row[STATE_COL] = State.CANCELED
 
     def check_exists(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:check_exists 84')
         meta = pcs.get_metas(self.cookie, self.tokens, self.row[PATH_COL])
         return meta and meta.get('errno', 12) == 0
 
     def upload(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:upload 88')
         '''一般上传模式.
 
         使用这种方式上传, 不可以中断上传过程, 但因为只用它来上传小的文件, 所以
@@ -105,7 +99,6 @@ class Uploader(threading.Thread, GObject.GObject):
             self.emit('network-error', self.row[FID_COL])
 
     def rapid_upload(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:rapid_upload 100')
         '''快速上传.
 
         如果失败, 就自动调用分片上传.
@@ -119,7 +112,6 @@ class Uploader(threading.Thread, GObject.GObject):
             self.slice_upload()
 
     def slice_upload(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/Uploader.py:slice_upload 113')
         '''分片上传'''
         self.is_slice_upload = True
         fid = self.row[FID_COL]

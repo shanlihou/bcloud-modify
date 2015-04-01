@@ -76,7 +76,6 @@ class DownloadPage(Gtk.Box):
     DOWNLOAD_SPEED_INTERVAL = 3000  # update download speed every 3s
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:__init__ 77')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
         if Config.GTK_GE_312:
@@ -225,26 +224,22 @@ class DownloadPage(Gtk.Box):
         state_col.set_sort_column_id(PERCENT_COL)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_page_show 225')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:check_first 230')
         if self.first_run:
             self.first_run = False
             self.load()
 
     def load(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:load 235')
         self.init_db()
         self.load_tasks_from_db()
         self.download_speed_init()
         self.show_all()
 
     def init_db(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:init_db 241')
         '''这个任务数据库只在程序开始时读入, 在程序关闭时导出.
 
         因为Gtk没有像在Qt中那么方便的使用SQLite, 而必须将所有数据读入一个
@@ -277,7 +272,6 @@ class DownloadPage(Gtk.Box):
         self.cursor.execute(sql)
 
     def on_destroy(self, *args):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_destroy 273')
         if not self.first_run:
             self.pause_tasks()
             self.conn.commit()
@@ -287,20 +281,17 @@ class DownloadPage(Gtk.Box):
                 row[CURRSIZE_COL] = worker.row[CURRSIZE_COL]
     
     def load_tasks_from_db(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:load_tasks_from_db 282')
         req = self.cursor.execute('SELECT * FROM tasks')
         for task in req:
             self.liststore.append(task)
 
     def add_task_db(self, task):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:add_task_db 287')
         '''向数据库中写入一个新的任务记录'''
         sql = 'INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         req = self.cursor.execute(sql, task)
         self.check_commit()
 
     def get_task_db(self, fs_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:get_task_db 293')
         '''从数据库中查询fsid的信息.
         
         如果存在的话, 就返回这条记录;
@@ -314,7 +305,6 @@ class DownloadPage(Gtk.Box):
             None
 
     def check_commit(self, force=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:check_commit 306')
         '''当修改数据库超过100次后, 就自动commit数据.'''
         self.commit_count = self.commit_count + 1
         if force or self.commit_count >= 100:
@@ -322,7 +312,6 @@ class DownloadPage(Gtk.Box):
             self.conn.commit()
 
     def update_task_db(self, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:update_task_db 313')
         '''更新数据库中的任务信息'''
         sql = '''UPDATE tasks SET 
         currsize=?, state=?, statename=?, humansize=?, percent=?
@@ -335,14 +324,12 @@ class DownloadPage(Gtk.Box):
         self.check_commit()
 
     def remove_task_db(self, fs_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:remove_task_db 325')
         '''将任务从数据库中删除'''
         sql = 'DELETE FROM tasks WHERE fsid=?'
         self.cursor.execute(sql, [fs_id, ])
         self.check_commit()
 
     def get_row_by_fsid(self, fs_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:get_row_by_fsid 331')
         '''确认在Liststore中是否存在这条任务. 如果存在, 返回TreeModelRow,
         否则就返回None'''
         for row in self.liststore:
@@ -352,14 +339,12 @@ class DownloadPage(Gtk.Box):
 
     # Open API
     def add_launch_task(self, pcs_file, app_info):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:add_launch_task 340')
         self.check_first()
         fs_id = str(pcs_file['fs_id'])
         self.app_infos[fs_id] = app_info
         self.add_task(pcs_file)
 
     def launch_app(self, fs_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:launch_app 346')
         if fs_id in self.app_infos:
             row = self.get_row_by_fsid(fs_id)
             if not row:
@@ -372,10 +357,8 @@ class DownloadPage(Gtk.Box):
 
     # Open API
     def add_tasks(self, pcs_files):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:add_tasks 358')
         '''建立批量下载任务, 包括目录'''
         def on_list_dir(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_list_dir 360')
             path, pcs_files = info
             if error or not pcs_files:
                 dialog = Gtk.MessageDialog(self.app.window,
@@ -400,7 +383,6 @@ class DownloadPage(Gtk.Box):
         self.check_commit(force=True)
 
     def add_task(self, pcs_file):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:add_task 384')
         '''加入新的下载任务'''
         if pcs_file['isdir']:
             return
@@ -440,7 +422,6 @@ class DownloadPage(Gtk.Box):
         self.scan_tasks()
 
     def scan_tasks(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:scan_tasks 423')
         '''扫描所有下载任务, 并在需要时启动新的下载'''
         for row in self.liststore:
             if len(self.workers.keys()) >= self.app.profile['concurr-tasks']:
@@ -449,18 +430,14 @@ class DownloadPage(Gtk.Box):
                 self.start_worker(row)
 
     def start_worker(self, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:start_worker 431')
         '''为task新建一个后台下载线程, 并开始下载.'''
         def on_worker_started(worker, fs_id):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_worker_started 433')
             pass
 
         def on_worker_received(worker, fs_id, received, received_total):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_worker_received 436')
             GLib.idle_add(do_worker_received, fs_id, received, received_total)
 
         def do_worker_received(fs_id, received, received_total):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:do_worker_received 439')
             self.download_speed_add(received)
             row = None
             if fs_id in self.workers:
@@ -478,11 +455,9 @@ class DownloadPage(Gtk.Box):
             self.update_task_db(row)
 
         def on_worker_downloaded(worker, fs_id):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_worker_downloaded 456')
             GLib.idle_add(do_worker_downloaded, fs_id)
 
         def do_worker_downloaded(fs_id):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:do_worker_downloaded 459')
             row = None
             if fs_id in self.workers:
                 row = self.workers[fs_id][1]
@@ -504,11 +479,9 @@ class DownloadPage(Gtk.Box):
             self.scan_tasks()
 
         def on_worker_network_error(worker, fs_id):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_worker_network_error 480')
             GLib.idle_add(do_worker_network_error, fs_id)
 
         def do_worker_network_error(fs_id):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:do_worker_network_error 483')
             row = self.workers.get(fs_id, None)
             if row:
                 row = row[1]
@@ -529,13 +502,11 @@ class DownloadPage(Gtk.Box):
             self.scan_tasks()
 
         def do_worker_disk_error(fs_id, tmp_filepath):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:do_worker_disk_error 503')
             # do not retry on disk-error
             self.app.toast(_('Disk Error: failed to read/write {0}').format(
                            tmp_filepath))
 
         def on_worker_disk_error(worker, fs_id, tmp_filepath):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_worker_disk_error 508')
             GLib.idle_add(do_worker_disk_error, fs_id, tmp_filepath)
 
         if not row or row[FSID_COL] in self.workers:
@@ -552,16 +523,13 @@ class DownloadPage(Gtk.Box):
         worker.start()
 
     def pause_worker(self, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:pause_worker 524')
         self.remove_worker(row[FSID_COL], stop=False)
 
     def stop_worker(self, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:stop_worker 527')
         '''停止这个task的后台下载线程'''
         self.remove_worker(row[FSID_COL], stop=True)
 
     def remove_worker(self, fs_id, stop=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:remove_worker 531')
         if fs_id not in self.workers:
             return
         worker = self.workers[fs_id][0]
@@ -572,7 +540,6 @@ class DownloadPage(Gtk.Box):
         self.workers.pop(fs_id, None)
 
     def restart_task(self, row):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:restart_task 541')
         '''重启下载任务.
 
         当指定的下载任务出现错误时(通常是网络连接超时), 如果用户允许, 就会在
@@ -581,7 +548,6 @@ class DownloadPage(Gtk.Box):
         self.start_task(row)
 
     def start_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:start_task 549')
         '''启动下载任务.
 
         将任务状态设定为Downloading, 如果没有超过最大任务数的话;
@@ -597,7 +563,6 @@ class DownloadPage(Gtk.Box):
 
     # Open API
     def pause_tasks(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:pause_tasks 564')
         '''暂停所有下载任务'''
         if self.first_run:
             return
@@ -605,7 +570,6 @@ class DownloadPage(Gtk.Box):
             self.pause_task(row, scan=False)
 
     def pause_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:pause_task 571')
         if not row:
             return
         if row[STATE_COL] == State.DOWNLOADING:
@@ -618,7 +582,6 @@ class DownloadPage(Gtk.Box):
                 self.scan_tasks()
 
     def remove_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:remove_task 583')
         # 当删除正在下载的任务时, 直接调用stop_worker(), 它会自动删除本地的
         # 文件片段
         if not row:
@@ -642,7 +605,6 @@ class DownloadPage(Gtk.Box):
 
     # handle download speed
     def download_speed_init(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:download_speed_init 606')
         if not self.download_speed_sid:
             # update speed label at each 5s
             self.download_speed_sid = GLib.timeout_add(
@@ -650,11 +612,9 @@ class DownloadPage(Gtk.Box):
         self.speed_label.set_text('0 kb/s')
 
     def download_speed_add(self, size):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:download_speed_add 613')
         self.download_speed_received += size
 
     def download_speed_interval(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:download_speed_interval 616')
         speed = self.download_speed_received // self.DOWNLOAD_SPEED_INTERVAL
         self.speed_label.set_text('%s kb/s' % speed)
         # reset received data size
@@ -662,7 +622,6 @@ class DownloadPage(Gtk.Box):
         return True
 
     def operate_selected_rows(self, operator):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:operate_selected_rows 623')
         '''对选中的条目进行操作.
 
         operator  - 处理函数
@@ -682,19 +641,15 @@ class DownloadPage(Gtk.Box):
         self.scan_tasks()
 
     def on_start_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_start_button_clicked 642')
         self.operate_selected_rows(self.start_task)
 
     def on_pause_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_pause_button_clicked 645')
         self.operate_selected_rows(self.pause_task)
 
     def on_remove_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_remove_button_clicked 648')
         self.operate_selected_rows(self.remove_task)
 
     def on_remove_finished_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_remove_finished_button_clicked 651')
         for row in self.liststore:
             if row[STATE_COL] == State.FINISHED:
                 self.remove_task(row, scan=False)
@@ -702,7 +657,6 @@ class DownloadPage(Gtk.Box):
         self.scan_tasks()
 
     def on_open_folder_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_open_folder_button_clicked 658')
         model, tree_paths = self.selection.get_selected_rows()
         if not tree_paths:
             return
@@ -711,7 +665,6 @@ class DownloadPage(Gtk.Box):
 
     def on_treeview_button_pressed(self, treeview, event):
         def on_choose_app_activated(menu_item):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:on_choose_app_activated 665')
             dialog = Gtk.AppChooserDialog.new_for_content_type(self.app.window,
                     Gtk.DialogFlags.MODAL, file_type)
             response = dialog.run()
@@ -722,7 +675,6 @@ class DownloadPage(Gtk.Box):
             do_launch_app(app_info)
 
         def do_launch_app(app_info):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:do_launch_app 675')
             row = self.get_row_by_fsid(fs_id)
             if not row:
                 return
@@ -731,7 +683,6 @@ class DownloadPage(Gtk.Box):
             app_info.launch([gfile, ], None)
 
         def build_app_menu(menu, menu_item, app_info):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/DownloadPage.py:build_app_menu 683')
             menu_item.set_always_show_image(True)
             img = self.app.mime.get_app_img(app_info)
             if img:

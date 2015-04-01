@@ -31,7 +31,6 @@ default_headers = {
 }
 
 def urloption(url, headers={}, retries=RETRIES):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:urloption 32')
     '''发送OPTION 请求'''
     headers_merged = default_headers.copy()
     for key in headers.keys():
@@ -51,7 +50,6 @@ def urloption(url, headers={}, retries=RETRIES):
 class ForbiddenHandler(urllib.request.HTTPErrorProcessor):
 
     def http_error_403(self, req, fp, code, msg, headers):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:http_error_403 51')
         return fp
 
     http_error_400 = http_error_403
@@ -59,7 +57,6 @@ class ForbiddenHandler(urllib.request.HTTPErrorProcessor):
 
 
 def urlopen_simple(url, retries=RETRIES, timeout=TIMEOUT):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:urlopen_simple 58')
     for i in range(retries):
         try:
             return urllib.request.urlopen(url, timeout=timeout)
@@ -68,7 +65,6 @@ def urlopen_simple(url, retries=RETRIES, timeout=TIMEOUT):
     return None
 
 def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:urlopen 66')
     '''打开一个http连接, 并返回Request.
 
     headers 是一个dict. 默认提供了一些项目, 比如User-Agent, Referer等, 就
@@ -100,7 +96,6 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
     return None
 
 def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:urlopen_without_redirect 97')
     '''请求一个URL, 并返回一个Response对象. 不处理重定向.
 
     使用这个函数可以返回URL重定向(Error 301/302)后的地址, 也可以重到URL中请
@@ -124,7 +119,6 @@ def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):
     return None
 
 def post_multipart(url, headers, fields, files, retries=RETRIES):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:post_multipart 120')
     content_type, body = encode_multipart_formdata(fields, files)
     schema = urllib.parse.urlparse(url)
 
@@ -151,7 +145,6 @@ def post_multipart(url, headers, fields, files, retries=RETRIES):
     return None
 
 def encode_multipart_formdata(fields, files):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:encode_multipart_formdata 146')
     BOUNDARY = b'----------ThIs_Is_tHe_bouNdaRY_$'
     S_BOUNDARY = b'--' + BOUNDARY
     E_BOUNARY = S_BOUNDARY + b'--'
@@ -178,5 +171,4 @@ def encode_multipart_formdata(fields, files):
     return content_type, body
 
 def get_content_type(filename):
-    print('/usr/local/lib/python3.4/dist-packages/bcloud/net.py:get_content_type 172')
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'

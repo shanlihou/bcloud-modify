@@ -21,7 +21,6 @@ from bcloud import util
 class RenameDialog(Gtk.Dialog):
 
     def __init__(self, app, path_list):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/RenameDialog.py:__init__ 22')
         super().__init__(_('Rename files'), app.window, Gtk.DialogFlags.MODAL,
                          (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                          Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -75,7 +74,6 @@ class RenameDialog(Gtk.Dialog):
 
     def show_message(self, message):
         def hide_message(timestamp):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/RenameDialog.py:hide_message 74')
             if timestamp == self.infobar.timestamp:
                 self.infobar.hide()
 
@@ -86,7 +84,6 @@ class RenameDialog(Gtk.Dialog):
         GLib.timeout_add(3000, hide_message, timestamp)
 
     def validate_path(self, abspath):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/RenameDialog.py:validate_path 84')
         if not abspath:
             self.show_message(_('Filename is empty'))
             return False
@@ -101,7 +98,6 @@ class RenameDialog(Gtk.Dialog):
             return True
 
     def do_response(self, response_id):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/RenameDialog.py:do_response 98')
         '''进行批量重命名.
 
         这里, 会忽略掉那些名称没发生变化的文件.
@@ -120,5 +116,4 @@ class RenameDialog(Gtk.Dialog):
                          filelist, callback=self.app.reload_current_page)
 
     def on_entry_changed(self, entry):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/RenameDialog.py:on_entry_changed 116')
         self.validate_path(entry.get_text())

@@ -33,7 +33,6 @@ class PwdDialog(Gtk.Dialog):
     '''输入密码的对话框'''
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:__init__ 34')
         super().__init__(_('Password:'), app.window, Gtk.DialogFlags.MODAL,
                          (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                          Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -50,7 +49,6 @@ class PwdDialog(Gtk.Dialog):
         box.show_all()
 
     def get_pwd(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:get_pwd 50')
         return self.entry.get_text()
 
 
@@ -63,7 +61,6 @@ class SharePage(Gtk.Box):
     first_run = True
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:__init__ 62')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
 
@@ -187,25 +184,21 @@ class SharePage(Gtk.Box):
         mtime_col.set_sort_column_id(MTIME_COL)
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_page_show 185')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:check_first 190')
         if self.first_run:
             self.first_run = False
             self.select_all_button.show_all()
             self.load()
 
     def load(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:load 196')
         pass
 
     def reload(self, *args, **kwds):
         def on_verify_password(pwd_cookie, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_verify_password 199')
             if error or not pwd_cookie:
                 self.app.toast(_('Error: password error, please try again'))
                 logger.error('SharePage.verify_password: %s, %s' %
@@ -215,7 +208,6 @@ class SharePage(Gtk.Box):
                 self.load_url()
 
         def on_get_share_uk(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_get_share_uk 208')
             if error or not info or not info[1]:
                 logger.error('SharePage.reload: %s, %s' % (error, info))
                 self.app.toast(_('Invalid link: {0}!'.format(self.curr_url)))
@@ -249,16 +241,13 @@ class SharePage(Gtk.Box):
                          self.curr_url, callback=on_get_share_uk)
 
     def load_next(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:load_next 241')
         '''载入下一页'''
         self.page += 1
         self.load_url()
 
     def load_url(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:load_url 246')
         '''读取分享文件列表'''
         def on_load_url(filelist, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_load_url 248')
             self.url_entry.props.secondary_icon_name = REFRESH_ICON
             if timestamp != self.url_entry.timestamp:
                 logger.debug('SharePage.load_url, dirname not match, ignored')
@@ -336,7 +325,6 @@ class SharePage(Gtk.Box):
 
     def on_cloud_button_clicked(self, button):
         def on_transfer_files(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_transfer_files 324')
             if error or not info:
                 self.app.toast(_('Failed to copy selected files!'))
                 logger.error('SharePage.on_cloud_button_clicked: %s %s' %
@@ -365,15 +353,12 @@ class SharePage(Gtk.Box):
                          callback=on_transfer_files)
 
     def on_url_entry_activated(self, entry):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_url_entry_activated 352')
         self.reload()
 
     def on_url_entry_changed(self, entry):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_url_entry_changed 355')
         entry.props.secondary_icon_name = GO_ICON
 
     def on_url_entry_icon_pressed(self, entry, icon_pos, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_url_entry_icon_pressed 358')
         if entry.props.secondary_icon_name == GO_ICON:
             self.reload()
         elif entry.props.secondary_icon_name == REFRESH_ICON:
@@ -385,18 +370,15 @@ class SharePage(Gtk.Box):
             entry.props.secondary_icon_name = REFRESH_ICON
 
     def on_select_all_button_toggled(self, column):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_select_all_button_toggled 369')
         state = self.select_all_button.get_active()
         self.select_all_button.set_active(not state)
         for row in self.liststore:
             row[CHECK_COL] = not state
 
     def on_row_checked(self, cell_renderer, path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_row_checked 375')
         self.liststore[path][CHECK_COL] = not self.liststore[path][CHECK_COL]
 
     def on_treeview_query_tooltip(self, treeview, x, y, keyboard_mode, tooltip):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_treeview_query_tooltip 378')
         bx, by = treeview.convert_widget_to_bin_window_coords(x, y)
         selected = treeview.get_path_at_pos(bx, by)
         if not selected:
@@ -427,7 +409,6 @@ class SharePage(Gtk.Box):
         return True
 
     def on_treeview_row_activated(self, treeview, tree_path, column):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_treeview_row_activated 408')
         if tree_path is None:
             return
 
@@ -440,6 +421,5 @@ class SharePage(Gtk.Box):
             self.reload()
 
     def on_treeview_scrolled(self, adjustment):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/SharePage.py:on_treeview_scrolled 420')
         if gutil.reach_scrolled_bottom(adjustment) and self.has_next:
             self.load_next()

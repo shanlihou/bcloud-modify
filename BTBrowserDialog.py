@@ -23,7 +23,6 @@ class BTBrowserDialog(Gtk.Dialog):
     file_sha1 = ''
 
     def __init__(self, parent, app, title, source_url, save_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:__init__ 24')
         '''初始化BT种子查询对话框.
 
         source_url - 如果是BT种子的话, 就是种子的绝对路径.
@@ -73,10 +72,8 @@ class BTBrowserDialog(Gtk.Dialog):
         self.request_data()
 
     def request_data(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:request_data 73')
         '''在调用dialog.run()之前先调用这个函数来获取数据'''
         def on_tasks_received(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:on_tasks_received 75')
             if error or not info:
                 logger.error('BTBrowserDialog.on_tasks_received: %s, %s.' %
                              (info, error))
@@ -118,7 +115,6 @@ class BTBrowserDialog(Gtk.Dialog):
                              callback=on_tasks_received)
 
     def get_selected(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:get_selected 116')
         '''返回选中要下载的文件的编号及sha1值, 从1开始计数.'''
         selected_idx = []
         for i, row in enumerate(self.liststore):
@@ -127,12 +123,10 @@ class BTBrowserDialog(Gtk.Dialog):
         return (selected_idx, self.file_sha1)
 
     def on_select_all_toggled(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:on_select_all_toggled 124')
         status = button.get_active()
         for row in self.liststore:
             row[CHECK_COL] = status
 
     def on_check_cell_toggled(self, cell, tree_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/BTBrowserDialog.py:on_check_cell_toggled 129')
         self.liststore[tree_path][CHECK_COL] = not \
                 self.liststore[tree_path][CHECK_COL]

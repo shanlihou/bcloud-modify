@@ -22,7 +22,6 @@ from bcloud.Widgets import SelectableLeftLabel
 class PropertiesDialog(Gtk.Dialog):
 
     def __init__(self, parent, app, pcs_file):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PropertiesDialog.py:__init__ 23')
         file_path, file_name = os.path.split(pcs_file['path'])
         super().__init__(file_name + _(' Properties'), app.window,
                          Gtk.DialogFlags.MODAL,
@@ -89,7 +88,6 @@ class PropertiesDialog(Gtk.Dialog):
 class FolderPropertyDialog(Gtk.Dialog):
 
     def __init__(self, icon_window, app, path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/PropertiesDialog.py:__init__ 89')
         file_path, file_name = os.path.split(path)
         # modify file_name if path is '/'
         if not file_name:

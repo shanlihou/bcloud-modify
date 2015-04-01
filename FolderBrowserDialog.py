@@ -20,7 +20,6 @@ class FolderBrowserDialog(Gtk.Dialog):
     is_loading = False
 
     def __init__(self, parent, app, title=_('Save to..')):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:__init__ 21')
         self.parent = parent
         self.app = app
         super().__init__(title, app.window, Gtk.DialogFlags.MODAL,
@@ -68,13 +67,11 @@ class FolderBrowserDialog(Gtk.Dialog):
         self.reset()
 
     def reset(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:reset 68')
         self.treestore.clear()
         root_iter = self.treestore.append(None, ['/', '/', False, False,])
         GLib.timeout_add(500, self.list_dir, root_iter)
 
     def list_dir(self, parent_iter):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:list_dir 73')
         if self.treestore[parent_iter][LOADED_COL]:
             return
         tree_path = self.treestore.get_path(parent_iter)
@@ -114,7 +111,6 @@ class FolderBrowserDialog(Gtk.Dialog):
         self.treestore[parent_iter][LOADED_COL] = True
 
     def get_path(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:get_path 112')
         '''获取选择的路径, 如果没有选择, 就返回根目录'''
         model, tree_iter = self.selection.get_selected()
         if not tree_iter:
@@ -123,11 +119,9 @@ class FolderBrowserDialog(Gtk.Dialog):
             return model[tree_iter][PATH_COL]
 
     def on_reload_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:on_reload_clicked 120')
         self.reset()
 
     def on_mkdir_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:on_mkdir_clicked 123')
         path = self.get_path()
         dialog = NewFolderDialog(self, self.app, path)
         dialog.run()
@@ -135,7 +129,6 @@ class FolderBrowserDialog(Gtk.Dialog):
         self.reset()
 
     def on_row_expanded(self, treeview, tree_iter, tree_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/FolderBrowserDialog.py:on_row_expanded 130')
         if self.is_loading:
             return
         self.is_loading = True

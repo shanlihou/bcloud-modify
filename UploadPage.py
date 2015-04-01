@@ -53,7 +53,6 @@ class UploadPage(Gtk.Box):
     commit_count = 0
 
     def __init__(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:__init__ 54')
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.app = app
         if Config.GTK_GE_312:
@@ -230,25 +229,21 @@ class UploadPage(Gtk.Box):
         state_col.set_sort_column_id(PERCENT_COL)
 
     def check_first(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:check_first 230')
         if self.first_run:
             self.first_run = False
             self.load()
 
     def on_page_show(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_page_show 235')
         if Config.GTK_GE_312:
             self.app.window.set_titlebar(self.headerbar)
             self.headerbar.show_all()
 
     def load(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:load 240')
         self.show_all()
         self.init_db()
         self.load_tasks_from_db()
 
     def init_db(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:init_db 245')
         cache_path = os.path.join(Config.CACHE_DIR,
                                   self.app.profile['username'])
         if not os.path.exists(cache_path):
@@ -281,18 +276,15 @@ class UploadPage(Gtk.Box):
         self.cursor.execute(sql)
 
     def reload(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:reload 277')
         pass
 
     def load_tasks_from_db(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:load_tasks_from_db 280')
         sql = 'SELECT * FROM upload'
         req = self.cursor.execute(sql)
         for task in req:
             self.liststore.append(task)
 
     def check_commit(self, force=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:check_commit 286')
         '''当修改数据库超过50次后, 就自动commit数据.'''
         self.commit_count = self.commit_count + 1
         if force or self.commit_count >= 50:
@@ -300,7 +292,6 @@ class UploadPage(Gtk.Box):
             self.conn.commit()
 
     def add_task_db(self, task):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:add_task_db 293')
         '''向数据库中写入一个新的任务记录, 并返回它的fid'''
         sql = '''INSERT INTO upload (
         name, source_path, path, size, curr_size, state, state_name,
@@ -311,14 +302,12 @@ class UploadPage(Gtk.Box):
         return req.lastrowid
 
     def add_slice_db(self, fid, slice_end, md5):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:add_slice_db 303')
         '''在数据库中加入上传任务分片信息'''
         sql = 'INSERT INTO slice VALUES(?, ?, ?)'
         self.cursor.execute(sql, (fid, slice_end, md5))
         self.check_commit()
 
     def get_task_db(self, source_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:get_task_db 309')
         '''从数据库中查询source_path的信息.
         
         如果存在的话, 就返回这条记录;
@@ -332,7 +321,6 @@ class UploadPage(Gtk.Box):
             None
 
     def get_slice_db(self, fid):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:get_slice_db 322')
         '''从数据库中取得fid的所有分片.
         
         返回的是一个list, 里面是按顺序排好的md5的值
@@ -345,7 +333,6 @@ class UploadPage(Gtk.Box):
             return None
 
     def update_task_db(self, row, force=False):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:update_task_db 334')
         '''更新数据库中的任务信息'''
         sql = '''UPDATE upload SET 
         curr_size=?, state=?, state_name=?, human_size=?, percent=?
@@ -358,7 +345,6 @@ class UploadPage(Gtk.Box):
         self.check_commit(force=force)
 
     def remove_task_db(self, fid):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:remove_task_db 346')
         '''将任务从数据库中删除'''
         self.remove_slice_db(fid)
         sql = 'DELETE FROM upload WHERE fid=?'
@@ -366,14 +352,12 @@ class UploadPage(Gtk.Box):
         self.check_commit(force=True)
 
     def remove_slice_db(self, fid):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:remove_slice_db 353')
         '''将上传任务的分片从数据库中删除'''
         sql = 'DELETE FROM slice WHERE fid=?'
         self.cursor.execute(sql, [fid, ])
         self.check_commit()
 
     def on_destroy(self, *args):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_destroy 359')
         if not self.first_run:
             self.conn.commit()
             for row in self.liststore:
@@ -383,7 +367,6 @@ class UploadPage(Gtk.Box):
 
     # Open API
     def add_file_task(self, dir_name=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:add_file_task 368')
         '''添加上传任务, 会弹出一个选择文件的对话框'''
         file_dialog = Gtk.FileChooserDialog(_('Choose Files..'),
                 self.app.window, Gtk.FileChooserAction.OPEN,
@@ -402,7 +385,6 @@ class UploadPage(Gtk.Box):
             self.upload_files(source_paths, dir_name)
 
     def add_folder_task(self, dir_name=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:add_folder_task 386')
         '''添加上传任务, 会弹出一个选择文件夹的对话框'''
         folder_dialog = Gtk.FileChooserDialog(_('Choose Folders..'),
                 self.app.window, Gtk.FileChooserAction.SELECT_FOLDER,
@@ -423,7 +405,6 @@ class UploadPage(Gtk.Box):
 
     # Open API
     def upload_files(self, source_paths, dir_name=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:upload_files 406')
         '''批量创建上传任务, 会扫描子目录并依次上传.
 
         source_path - 本地文件的绝对路径
@@ -431,7 +412,6 @@ class UploadPage(Gtk.Box):
                       对话框让用户来选择一个目录.
         '''
         def scan_folders(folder_path):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:scan_folders 413')
             file_list = os.listdir(folder_path)
             source_paths = [os.path.join(folder_path, f) for f in file_list]
             self.upload_files(source_paths,
@@ -496,7 +476,6 @@ class UploadPage(Gtk.Box):
         dialog.destroy()
 
     def upload_file(self, source_path, dir_name):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:upload_file 477')
         '''上传一个文件'''
         row = self.get_task_db(source_path)
         source_dir, filename = os.path.split(source_path)
@@ -532,7 +511,6 @@ class UploadPage(Gtk.Box):
         self.liststore.append(task)
 
     def start_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:start_task 512')
         '''启动上传任务.
 
         将任务状态设定为Uploading, 如果没有超过最大任务数的话;
@@ -549,7 +527,6 @@ class UploadPage(Gtk.Box):
 
     # Open API
     def pause_tasks(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:pause_tasks 528')
         '''暂停所有上传任务'''
         if self.first_run:
             return
@@ -557,7 +534,6 @@ class UploadPage(Gtk.Box):
             self.pause_task(row, scan=False)
 
     def pause_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:pause_task 535')
         '''暂停下载任务'''
         if row[STATE_COL] == State.UPLOADING:
             self.remove_worker(row[FID_COL], stop=False)
@@ -569,7 +545,6 @@ class UploadPage(Gtk.Box):
                 self.scan_tasks()
 
     def remove_task(self, row, scan=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:remove_task 546')
         '''删除下载任务'''
         if row[STATE_COL] == State.UPLOADING:
             self.remove_worker(row[FID_COL], stop=True)
@@ -581,7 +556,6 @@ class UploadPage(Gtk.Box):
             self.scan_tasks()
 
     def scan_tasks(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:scan_tasks 557')
         if len(self.workers.keys()) >= self.app.profile['concurr-tasks']:
             return
         for row in self.liststore:
@@ -593,11 +567,9 @@ class UploadPage(Gtk.Box):
 
     def start_worker(self, row):
         def on_worker_slice_sent(worker, fid, slice_end, md5):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_worker_slice_sent 567')
             GLib.idle_add(do_worker_slice_sent, fid, slice_end, md5)
 
         def do_worker_slice_sent(fid, slice_end, md5):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:do_worker_slice_sent 570')
             if fid not in self.workers:
                 return
             row = self.get_row_by_fid(fid)
@@ -612,12 +584,10 @@ class UploadPage(Gtk.Box):
             self.add_slice_db(fid, slice_end, md5)
 
         def on_worker_merge_files(worker, fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_worker_merge_files 584')
             GLib.idle_add(do_worker_merge_files, fid)
 
         def do_worker_merge_files(fid):
             def on_create_superfile(pcs_file, error=None):
-                print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_create_superfile 587')
                 if error or not pcs_file:
                     self.app.toast(_('Failed to upload, please try again'))
                     logger.error('UploadPage.do_worker_merge_files: %s, %s' %
@@ -643,11 +613,9 @@ class UploadPage(Gtk.Box):
                                  callback=on_create_superfile)
 
         def on_worker_uploaded(worker, fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_worker_uploaded 612')
             GLib.idle_add(do_worker_uploaded, fid)
 
         def do_worker_uploaded(fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:do_worker_uploaded 615')
             if fid not in self.workers:
                 return
             row = self.get_row_by_fid(fid)
@@ -665,15 +633,12 @@ class UploadPage(Gtk.Box):
             self.scan_tasks()
 
         def on_worker_disk_error(worker, fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_worker_disk_error 632')
             GLib.idle_add(do_worker_error, fid)
 
         def on_worker_network_error(worker, fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_worker_network_error 635')
             GLib.idle_add(do_worker_error, fid)
 
         def do_worker_error(fid):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:do_worker_error 638')
             row = self.get_row_by_fid(fid)
             if not row:
                 return
@@ -699,7 +664,6 @@ class UploadPage(Gtk.Box):
         worker.start()
 
     def remove_worker(self, fid, stop=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:remove_worker 663')
         if fid not in self.workers:
             return
         worker = self.workers[fid][0]
@@ -710,21 +674,18 @@ class UploadPage(Gtk.Box):
         self.workers.pop(fid, None)
 
     def get_row_by_source_path(self, source_path):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:get_row_by_source_path 673')
         for row in self.liststore:
             if row[SOURCEPATH_COL] == source_path:
                 return row
         return None
 
     def get_row_by_fid(self, fid):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:get_row_by_fid 679')
         for row in self.liststore:
             if row[FID_COL] == fid:
                 return row
         return None
 
     def operate_selected_rows(self, operator):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:operate_selected_rows 685')
         '''对选中的条目进行操作.
 
         operator  - 处理函数
@@ -741,19 +702,15 @@ class UploadPage(Gtk.Box):
                 operator(row)
 
     def on_start_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_start_button_clicked 701')
         self.operate_selected_rows(self.start_task)
 
     def on_pause_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_pause_button_clicked 704')
         self.operate_selected_rows(self.pause_task)
 
     def on_remove_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_remove_button_clicked 707')
         self.operate_selected_rows(self.remove_task)
 
     def on_remove_finished_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_remove_finished_button_clicked 710')
         tree_iters = []
         for row in self.liststore:
             if row[STATE_COL] == State.FINISHED:
@@ -764,7 +721,6 @@ class UploadPage(Gtk.Box):
                 self.liststore.remove(tree_iter)
 
     def on_open_folder_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_open_folder_button_clicked 720')
         model, tree_paths = self.selection.get_selected_rows()
         if not tree_paths or len(tree_paths) != 1:
             return
@@ -775,9 +731,7 @@ class UploadPage(Gtk.Box):
         self.app.switch_page(self.app.home_page)
 
     def on_upload_file_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_upload_file_button_clicked 730')
         self.add_file_task()
 
     def on_upload_folder_button_clicked(self, button):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/UploadPage.py:on_upload_folder_button_clicked 733')
         self.add_folder_task()

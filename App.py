@@ -65,14 +65,12 @@ class App:
     status_icon = None
 
     def __init__(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:__init__ 66')
         self.app = Gtk.Application.new(Config.DBUS_APP_NAME, 0)
         self.app.connect('startup', self.on_app_startup)
         self.app.connect('activate', self.on_app_activate)
         self.app.connect('shutdown', self.on_app_shutdown)
 
     def on_app_startup(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_app_startup 72')
         GLib.set_application_name(Config.APPNAME)
         self.icon_theme = Gtk.IconTheme.get_default()
         self.icon_theme.append_search_path(Config.ICON_PATH)
@@ -162,7 +160,6 @@ class App:
         paned.add2(self.notebook)
 
     def on_app_activate(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_app_activate 161')
         if not self.profile:
             self.show_signin_dialog()
         self.window.show_all()
@@ -170,22 +167,18 @@ class App:
             self.switch_page(self.home_page)
 
     def on_app_shutdown(self, app):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_app_shutdown 168')
         '''Dump profile content to disk'''
         if self.profile:
             self.upload_page.on_destroy()
             self.download_page.on_destroy()
 
     def run(self, argv):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:run 174')
         self.app.run(argv)
 
     def quit(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:quit 177')
         self.app.quit()
 
     def set_dark_theme(self, status):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:set_dark_theme 180')
         settings = Gtk.Settings.get_default()
         settings.props.gtk_application_prefer_dark_theme = status
         if status:
@@ -197,7 +190,6 @@ class App:
                 row[3] = self.default_color
 
     def show_signin_dialog(self, auto_signin=True):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:show_signin_dialog 191')
         self.profile = None
         signin = SigninDialog(self, auto_signin=auto_signin)
         signin.run()
@@ -225,12 +217,10 @@ class App:
             self.quit()
 
     def on_main_window_resized(self, window):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_main_window_resized 218')
         if self.profile:
             self.profile['window-size'] = window.get_size()
 
     def on_main_window_deleted(self, window, event):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_main_window_deleted 222')
         if self.profile and self.profile['use-status-icon']:
             window.hide()
         else:
@@ -239,7 +229,6 @@ class App:
 
     def on_main_window_drag_data_received(self, window, drag_context, x, y,
                                           data, info, time):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_main_window_drag_data_received 229')
         '''从其它程序拖放目录/文件, 以便上传.
 
         这里, 会弹出一个选择目标文件夹的对话框
@@ -253,7 +242,6 @@ class App:
                 self.upload_page.upload_files(source_paths)
 
     def on_preferences_action_activated(self, action, params):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_preferences_action_activated 243')
         if self.profile:
             dialog = PreferencesDialog(self)
             dialog.run()
@@ -265,7 +253,6 @@ class App:
                 self.set_dark_theme(self.profile['use-dark-theme'])
 
     def on_signout_action_activated(self, action, params):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_signout_action_activated 254')
         '''在退出登录前, 应该保存当前用户的所有数据'''
         if self.profile:
             self.upload_page.pause_tasks()
@@ -273,7 +260,6 @@ class App:
             self.show_signin_dialog(auto_signin=False)
 
     def on_about_action_activated(self, action, params):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_about_action_activated 261')
         dialog = Gtk.AboutDialog()
         dialog.set_modal(True)
         dialog.set_transient_for(self.window)
@@ -289,11 +275,9 @@ class App:
         dialog.destroy()
 
     def on_quit_action_activated(self, action, params):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_quit_action_activated 276')
         self.quit()
 
     def update_quota(self, quota_info, error=None):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:update_quota 279')
         '''更新网盘容量信息'''
         if not quota_info or quota_info['errno'] != 0:
             return
@@ -305,10 +289,8 @@ class App:
         self.progressbar.set_fraction(used / total)
 
     def update_avatar(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:update_avatar 290')
         '''更新用户头像'''
         def do_update_avatar(info, error=None):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:do_update_avatar 292')
             if error or not info:
                 logger.error('Failed to get user avatar: %s, %s' %
                              (info, error))
@@ -326,7 +308,6 @@ class App:
 
     def init_notebook(self):
         def append_page(page):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:append_page 308')
             self.notebook.append_page(page, Gtk.Label.new(page.disname))
             self.nav_liststore.append([page.icon_name, page.disname,
                                        page.tooltip, self.default_color])
@@ -365,7 +346,6 @@ class App:
         self.notebook.show_all()
 
     def reload_current_page(self, *args, **kwds):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:reload_current_page 346')
         '''重新载入当前页面.
         
         所有的页面都应该实现reload()方法.
@@ -374,23 +354,19 @@ class App:
         self.notebook.get_nth_page(index).reload()
 
     def switch_page_by_index(self, index):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:switch_page_by_index 354')
         self.notebook.set_current_page(index)
 
     def switch_page(self, page):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:switch_page 357')
         for index, p in enumerate(self.notebook):
             if p == page:
                 self.nav_selection.select_iter(self.nav_liststore[index].iter)
                 break
 
     def on_notebook_switched(self, notebook, page, index):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_notebook_switched 363')
         page.check_first()
         page.on_page_show()
 
     def on_nav_selection_changed(self, nav_selection):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_nav_selection_changed 367')
         model, tree_iter = nav_selection.get_selected()
         if not tree_iter:
             return
@@ -400,13 +376,11 @@ class App:
 
     def init_status_icon(self):
         def on_status_icon_popup_menu(status_icon, event_button, event_time):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_status_icon_popup_menu 375')
             menu.popup(None, None,
                     lambda a,b: Gtk.StatusIcon.position_menu(menu, status_icon),
                     None, event_button, event_time)
 
         def on_status_icon_activate(status_icon):
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:on_status_icon_activate 380')
             if self.window.props.visible:
                 self.window.hide()
             else:
@@ -463,7 +437,6 @@ class App:
     # Open API
     def blink_page(self, page):
         def blink():
-            print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:blink 435')
             row[COLOR_COL] = random.choice(self.color_schema)
             if time.time() - start_time > BLINK_SUSTAINED:
                 row[COLOR_COL] = self.default_color
@@ -478,20 +451,17 @@ class App:
         GLib.timeout_add(BLINK_DELTA, blink)
 
     def get_default_color(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:get_default_color 449')
         context = self.window.get_style_context()
         return context.get_color(Gtk.StateFlags.NORMAL)
 
     # Open API
     def update_clipboard(self, text):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:update_clipboard 454')
         '''将文本复制到系统剪贴板里面'''
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         clipboard.set_text(text, -1)
         self.toast(_('{0} copied to clipboard'.format(text)))
 
     def init_notify(self):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:init_notify 460')
         self.notify = None
         if self.profile['use-notify']:
             status = Notify.init(Config.APPNAME)
@@ -502,7 +472,6 @@ class App:
 
     # Open API
     def toast(self, text):
-        print('/usr/local/lib/python3.4/dist-packages/bcloud/App.py:toast 470')
         '''在用户界面显示一个消息通知.
 
         可以使用系统提供的Notification工具, 也可以在窗口的最下方滚动弹出
