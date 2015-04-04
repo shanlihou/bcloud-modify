@@ -40,12 +40,16 @@ def get_BAIDUID():
         '&class=login&logintype=basicLogin',
     ])
     req = net.urlopen(url, headers={'Referer': ''})
+    print(req.headers.get_all('Set-Cookie'))
+    print(type(req))
     if req:
         return req.headers.get_all('Set-Cookie')
     else:
         return None
 
 def get_token(cookie):
+    print(cookie)
+    print(type(cookie))
     print('/usr/local/lib/python3.4/dist-packages/bcloud/auth.py:get_token 45')
     '''获取一个页面访问的token, 这里需要之前得到的BAIDUID 这个cookie值
 
