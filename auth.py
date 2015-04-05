@@ -118,6 +118,9 @@ def check_login(cookie, tokens, username):
     返回的信息如下:
     {"errInfo":{ "no": "0" }, "data": { "codeString" : "", "vcodetype" : "" }}
     '''
+    print(cookie)
+    print(tokens)
+    print(username)
     url = ''.join([
         const.PASSPORT_URL,
         '?logincheck',
@@ -144,6 +147,8 @@ def get_signin_vcode(cookie, codeString):
 
     codeString - 调用check_login()时返回的codeString.
     '''
+    print(cookie)
+    print(codeString)
     url = ''.join([
         const.PASSPORT_BASE,
         'cgi-bin/genimage?',
@@ -153,7 +158,11 @@ def get_signin_vcode(cookie, codeString):
         'Cookie': cookie.header_output(),
         'Referer': const.REFERER,
     }
+
     req = net.urlopen(url, headers=headers)
+    print('\n\n\n\n**************')
+    print(req)
+    print('**************\n\n\n\n')
     if req:
         return req.data
     else:
@@ -225,6 +234,8 @@ def post_login(cookie, tokens, username, password, rsakey, verifycode='',
       4 - 密码错误
     257 - 需要输入验证码, 此时info里面存放着(vcodetype, codeString))
     '''
+    print(verifycode)
+    print(codestring)
     url = const.PASSPORT_LOGIN
     data = ''.join([
         'staticpage=https%3A%2F%2Fpassport.baidu.com%2Fstatic%2Fpasspc-account%2Fhtml%2Fv3Jump.html',

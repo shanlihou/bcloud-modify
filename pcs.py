@@ -997,6 +997,11 @@ def cloud_add_bt_task(cookie, tokens, source_url, save_path, selected_idx,
     vcode        - 验证码的vcode
     vcode_input  - 用户输入的四位验证码
     '''
+    print(selected_idx)
+    print(type(selected_idx))
+    print(file_sha1)
+    print(vcode)
+    print(vcode_input)
     url = ''.join([
         const.PAN_URL,
         'rest/2.0/services/cloud_dl?channel=chunlei&clienttype=0&web=1',
@@ -1065,6 +1070,8 @@ def cloud_query_magnetinfo(cookie, tokens, source_url, save_path):
     source_url - 磁链的url, 以magent:开头.
     save_path  - 保存到哪个目录
     '''
+    print (source_url)
+    print (save_path)
     url = ''.join([
         const.PAN_URL,
         'rest/2.0/services/cloud_dl?channel=chunlei&clienttype=0&web=1',

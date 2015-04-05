@@ -190,6 +190,7 @@ class SigninDialog(Gtk.Dialog):
             self.remember_check.set_sensitive(False)
 
         GLib.timeout_add(500, self.load_defualt_profile)
+        self.signin()
 
     def load_defualt_profile(self):
         if self.conf['default']:
@@ -300,6 +301,7 @@ class SigninDialog(Gtk.Dialog):
                                                tokens['token'], codeString,
                                                vcodetype)
                     response = dialog.run()
+                    print(response)
                     verifycode = dialog.get_vcode()
                     codeString = dialog.codeString
                     dialog.destroy()
@@ -374,6 +376,7 @@ class SigninDialog(Gtk.Dialog):
                         gutil.async_call(auth.get_public_key, cookie,
                                          tokens, callback=on_get_public_key)
                 else:
+                    print('get public key')
                     gutil.async_call(auth.get_public_key, cookie,
                                      tokens, callback=on_get_public_key)
 
@@ -404,6 +407,7 @@ class SigninDialog(Gtk.Dialog):
                                  callback=on_get_UBI)
 
         def on_get_BAIDUID(uid_cookie, error=None):
+            print(type(uid_cookie))
             if error or not uid_cookie:
                 logger.error('SigninDialog.on_get_BAIDUID: %s, %s' %
                              (uid_cookie, error))
@@ -415,14 +419,16 @@ class SigninDialog(Gtk.Dialog):
                 gutil.async_call(auth.get_token, cookie, callback=on_get_token)
 
 
-        username = self.username_combo.get_child().get_text()
-        password = self.password_entry.get_text()
+#        username = self.username_combo.get_child().get_text()
+#        password = self.password_entry.get_text()
+        username = '分是否收费'
+        password = '410015216'
         # 使用本地的缓存token, 有效期是三天
-        if not self.password_changed and self.signin_check.get_active():
-            cookie, tokens = self.load_auth(username)
-            if cookie and tokens:
-                self.update_profile(username, password, cookie, tokens)
-                return
+#        if not self.password_changed and self.signin_check.get_active():
+#            cookie, tokens = self.load_auth(username)
+#            if cookie and tokens:
+#                self.update_profile(username, password, cookie, tokens)
+#                return
         cookie = RequestCookie()
         tokens = {}
         verifycode = ''
