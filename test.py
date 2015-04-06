@@ -4,7 +4,8 @@ from bcloud import auth
 from bcloud.RequestCookie import RequestCookie
 from bcloud import util
 from bcloud import pcs
-from bcloud import magnet
+from bcloud.magnet import magnet
+import string
 cookie = RequestCookie()
 tokens = {}
 def writeCookie(fileName, cookie):
@@ -123,23 +124,64 @@ def login():
 		print('*************\n\n\n')
 		saveTokens(tokens)
 		print(readTokens())
-def addBTTask():
+def addBTTask(source_url):
 	global cookie
 	global tokens
-	source_url = input('please input the url:\n')
 	save_path = '/'
 	cloud_ret = pcs.cloud_query_magnetinfo(cookie, tokens, source_url, save_path)
 	print(cloud_ret)
+	if 'error_code' in cloud_ret:
+		print('error_code')
+		return
 	
 	listCount = cloud_ret['total']
 	selectList = [i for i in range(1, listCount + 1)]
 	print(selectList)
 
-
 	add_ret = pcs.cloud_add_bt_task(cookie, tokens, source_url, save_path, selectList, '')
 	print(add_ret)
+
+def print_task():
+	global cookie
+	global tokens
+	list_task_ret = pcs.cloud_list_task(cookie, tokens)
+	ids = []
+	for i in list_task_ret['task_info']:
+		ids.append(i['task_id'])
+	task_info_ret = pcs.cloud_query_task(cookie, tokens, ids)
+	task_info = task_info_ret['task_info']
+	for i in task_info:
+		print('\n')
+		print(task_info[i]['task_name'])
+		file_size = int(task_info[i]['file_size'])
+		finish_size = int(task_info[i]['finished_size'])
+		print(str(file_size / 1024 / 1024 / 1024) + 'GB')
+		print(finish_size * 100 / file_size)
+def printMag(magList, sizeList):
+	for i in range(len(magList)):
+		print(i)
+		print(magList[i] + sizeList[i])
+	
 def main():
-	movCode = input('please input the code:\n')
-	print(getAllMagnet(movCode))
+	login()
+	magList = []
+	sizeList = []
+	while(True):
+		ret = input('please input the operation:')
+		if (ret == 'q'):
+			break
+		elif (ret == 'pt'):
+			print_task()
+		elif (ret == 'pm'):
+			printMag(magList, sizeList)
+
+		elif (ret == 'c'):
+			code = input('please input the code:')
+			magList, sizeList = magnet.getAllMagnet(code)
+		elif (ret == 'd'):
+			raw = int(input('please input the raw:'))
+			addBTTask(magList[raw])
+
+			
 	
 main()

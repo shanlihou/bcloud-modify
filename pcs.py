@@ -1131,6 +1131,7 @@ def cloud_query_task(cookie, tokens, task_ids):
         '&channel=chunlei&clienttype=0&web=1',
     ])
     req = net.urlopen(url, headers={'Cookie': cookie.header_output()})
+    
     if req:
         content = req.data
         return json.loads(content.decode())
