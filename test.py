@@ -67,7 +67,7 @@ def login():
 
 	cookie.load_list(ubi)
 	print(cookie)
-	username = '分是否收费'
+	username = input('please input the name:')
 	check_ret = auth.check_login(cookie, tokens, username)
 	print(check_ret)
 
@@ -84,7 +84,7 @@ def login():
 
 	pubkey = key['pubkey']
 	rsakey = key['key']
-	password = '410015216'
+	password = input('please input the passwd:')
 	password_enc = util.RSA_encrypt(pubkey, password)
 	post_ret = auth.post_login(cookie, tokens, username, password_enc, rsakey, '', codeString)
 	print(post_ret)
