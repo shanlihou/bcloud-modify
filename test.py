@@ -1,10 +1,12 @@
 import sys
 import os
+import re
 from bcloud import auth
 from bcloud.RequestCookie import RequestCookie
 from bcloud import util
 from bcloud import pcs
 from bcloud.magnet import magnet
+from bcloud import net
 import string
 cookie = RequestCookie()
 tokens = {}
@@ -129,18 +131,38 @@ def addBTTask(source_url):
 	global tokens
 	save_path = '/'
 	cloud_ret = pcs.cloud_query_magnetinfo(cookie, tokens, source_url, save_path)
+	pattern = re.compile(r'\.(mp4|avi|rmvb|wmv|mkv)$', re.I)
 	print(cloud_ret)
 	if 'error_code' in cloud_ret:
 		print('error_code')
-		return
+		return False
 	
 	listCount = cloud_ret['total']
-	selectList = [i for i in range(1, listCount + 1)]
+	selectList = []
+	for i in range(listCount):
+		patFind = pattern.search(cloud_ret['magnet_info'][i]['file_name'])
+		if (patFind):
+			selectList.append(i + 1)
 	print(selectList)
 
 	add_ret = pcs.cloud_add_bt_task(cookie, tokens, source_url, save_path, selectList, '')
 	print(add_ret)
-
+	if (not ('error_code' in add_ret)):
+		return True
+	while(add_ret['error_code'] == -19):
+		req = net.urlopen(add_ret['img'], {'Cookie': cookie.header_output()})
+		img_data = req.data
+		fileWrite = open('btImg', 'wb')
+		print(img_data)
+		fileWrite.write(img_data)
+		fileWrite.close()
+		os.system('display btImg')
+		vcode = input('please input the verifycode:\n')
+		add_ret = pcs.cloud_add_bt_task(cookie, tokens, source_url, save_path, selectList, '', add_ret['vcode'], vcode)
+		print(add_ret)
+		if (not ('error_code' in add_ret)):
+			return True
+	return False
 def print_task():
 	global cookie
 	global tokens
@@ -161,11 +183,17 @@ def printMag(magList, sizeList):
 	for i in range(len(magList)):
 		print(i)
 		print(magList[i] + sizeList[i])
+def addTaskSeq(magList, raw):
+	for i in range(raw, len(magList)):
+		if (addBTTask(magList[i])):
+			return i + 1
+	return 0
 	
 def main():
 	login()
 	magList = []
 	sizeList = []
+	downSeq = 0
 	while(True):
 		ret = input('please input the operation:')
 		if (ret == 'q'):
@@ -181,6 +209,11 @@ def main():
 		elif (ret == 'd'):
 			raw = int(input('please input the raw:'))
 			addBTTask(magList[raw])
+		elif (ret == 's'):
+			downSeq = addTaskSeq(magList, downSeq)
+			print(downSeq)
+		elif (ret == 'cs'):
+			downSeq = 0
 
 			
 	
