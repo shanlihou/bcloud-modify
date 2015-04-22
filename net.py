@@ -76,6 +76,7 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
     req.data 里面放着的是最终的http数据内容, 通常都是UTF-8编码的文本.
     '''
     headers_merged = default_headers.copy()
+    print(headers_merged)
     for key in headers.keys():
         headers_merged[key] = headers[key]
     opener = urllib.request.build_opener(ForbiddenHandler)
