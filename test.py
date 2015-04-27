@@ -51,8 +51,15 @@ def login():
 		return
 	
 	baiduid = auth.get_BAIDUID()
+	print('baiduid:')
+	print(baiduid)
 	cookie.load_list(baiduid)
+	print('cookie:')
 	print(cookie)
+	for k in cookie:
+		print(str(k) + ':' + str(cookie[k]))
+	print(re.ASCII)
+	print(type(re.ASCII))
 
 	token = auth.get_token(cookie)
 	print(token)
@@ -62,8 +69,11 @@ def login():
 	cookie.load_list(hosupport)
 	cookie.load('cflag=65535%3A1; PANWEB=1;')
 	print(tokens)
-	print('cookie is ')
-	print(cookie)
+	print('cookie is :')
+	for k in cookie:
+		print(k)
+		print(cookie[k])
+	print(cookie.header_output())
 	ubi = auth.get_UBI(cookie, tokens)
 	print(ubi)
 
@@ -87,6 +97,7 @@ def login():
 	pubkey = key['pubkey']
 	rsakey = key['key']
 	password = input('please input the passwd:')
+	print(pubkey)
 	password_enc = util.RSA_encrypt(pubkey, password)
 	post_ret = auth.post_login(cookie, tokens, username, password_enc, rsakey, '', codeString)
 	print(post_ret)
