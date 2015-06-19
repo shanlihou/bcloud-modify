@@ -90,6 +90,7 @@ def login():
 	print(post_ret)
 	
 	errno, query = post_ret
+	print('errno is :')
 	print(errno)
 	print(cookie)
 
@@ -108,22 +109,22 @@ def login():
 		print (post_ret)
 		
 		errno, query = post_ret
-		cookie.load_list(query)
-		bdstoken = auth.get_bdstoken(cookie)
-		print(bdstoken)
-		tokens['bdstoken'] = bdstoken
-		print('\n\n\n**********')
-		print(type(cookie))
-		print(type(cookie.output()))
-		print(cookie)
-		fileWrite = open('cookie.txt', 'w')
-		fileWrite.write(str(cookie))
-		fileWrite.close()
-		print(type(tokens))
-		print(tokens)
-		print('*************\n\n\n')
-		saveTokens(tokens)
-		print(readTokens())
+	cookie.load_list(query)
+	bdstoken = auth.get_bdstoken(cookie)
+	print(bdstoken)
+	tokens['bdstoken'] = bdstoken
+	print('\n\n\n**********')
+	print(type(cookie))
+	print(type(cookie.output()))
+	print(cookie)
+	fileWrite = open('cookie.txt', 'w')
+	fileWrite.write(str(cookie))
+	fileWrite.close()
+	print(type(tokens))
+	print(tokens)
+	print('*************\n\n\n')
+	saveTokens(tokens)
+	print(readTokens())
 def addBTTask(source_url):
 	global cookie
 	global tokens
@@ -149,6 +150,7 @@ def print_task():
 	for i in list_task_ret['task_info']:
 		ids.append(i['task_id'])
 	task_info_ret = pcs.cloud_query_task(cookie, tokens, ids)
+	print(task_info_ret)
 	task_info = task_info_ret['task_info']
 	for i in task_info:
 		print('\n')
