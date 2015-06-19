@@ -39,8 +39,10 @@ def get_BAIDUID():
         '&tt=', util.timestamp(),
         '&class=login&logintype=basicLogin',
     ])
+    print(url)
     req = net.urlopen(url, headers={'Referer': ''})
     print(req.headers.get_all('Set-Cookie'))
+    print(req.headers)
     print(type(req))
     if req:
         return req.headers.get_all('Set-Cookie')
@@ -73,6 +75,8 @@ def get_token(cookie):
         '&tt=', util.timestamp(),
         '&class=login&logintype=basicLogin',
     ])
+    print('cookie header:')
+    print(cookie.header_output())
     headers={
         'Cookie': cookie.header_output(),
         'Accept': const.ACCEPT_HTML,
@@ -120,7 +124,7 @@ def check_login(cookie, tokens, username):
     '''
     print(cookie)
     print(tokens)
-    print(username)
+    print(encoder.encode_uri_component(username))
     url = ''.join([
         const.PASSPORT_URL,
         '?logincheck',
@@ -135,6 +139,8 @@ def check_login(cookie, tokens, username):
         'Referer': const.REFERER,
     }
     req = net.urlopen(url, headers=headers)
+    print('data is :')
+    print(req.data)
     if req:
         ubi = req.headers.get_all('Set-Cookie')
         return ubi, json.loads(req.data.decode())
@@ -263,7 +269,14 @@ def post_login(cookie, tokens, username, password, rsakey, verifycode='',
         'Referer': const.REFERER,
         'Connection': 'Keep-Alive',
     }
+    print('data is:')
+    print('\n\n\n')
+    print(data)
+    print('\n\n\n')
+    print(data.encode())
+    print('\n\n\n')
     req = net.urlopen(url, headers=headers, data=data.encode())
+    print(req.data)
     if req:
         content= req.data.decode()
         match = re.search('"(err_no[^"]+)"', content)

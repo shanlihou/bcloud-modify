@@ -15,7 +15,7 @@ class magnet:
 			sizeList = sizePat.findall(html)
 			return matchList, sizeList
 			
-		return None
+		return None, None
 
 	def getMagnet(urlPath):
 		response = urllib.request.urlopen(urlPath)

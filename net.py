@@ -79,6 +79,12 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
     for key in headers.keys():
         headers_merged[key] = headers[key]
     opener = urllib.request.build_opener(ForbiddenHandler)
+    print(headers_merged)
+    print(type(headers_merged))
+    print(data)
+    print(url)
+  
+
     opener.addheaders = [(k, v) for k,v in headers_merged.items()]
 
     for i in range(retries):
@@ -86,6 +92,7 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
             req = opener.open(url, data=data, timeout=timeout)
             encoding = req.headers.get('Content-encoding')
             req.data = req.read()
+            print(encoding)
             if encoding == 'gzip':
                 req.data = gzip.decompress(req.data)
             elif encoding == 'deflate':

@@ -156,11 +156,20 @@ def RSA_encrypt(public_key, message):
     # 如果没能成功导入RSA模块, 就直接返回空白字符串.
     if not globals().get('RSA'):
         return ''
-    rsakey = RSA.importKey(public_key)
-    rsakey = PKCS1_v1_5.new(rsakey)
-    encrypted = rsakey.encrypt(message.encode())
-    return base64.encodestring(encrypted).decode().replace('\n', '')
 
+    rsakey = RSA.importKey(public_key)
+    print('\n\n\npublic_key:')
+    print(public_key + '\n')
+    print(message + '\n')
+    print(rsakey)
+    rsakey = PKCS1_v1_5.new(rsakey)
+    print(rsakey)
+    encrypted = rsakey.encrypt(message.encode())
+    strPrint = ''
+    for i in encrypted:
+    	strPrint = strPrint + str(i) + ' '
+    print(strPrint)
+    return base64.encodestring(encrypted).decode().replace('\n', '')
 def m3u8_to_m3u(pls):
     output = ['#EXTM3U']
     srcs_set = set()
