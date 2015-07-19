@@ -7,18 +7,15 @@ class magnet:
 		response = urllib.request.urlopen(urlPath)
 		html = response.read()
 		html = html.decode('utf-8')
-		#pattern = re.compile(r'http://www\.btspread\.com/magnet/detail/hash/[A-F0-9]+')
-		magPat = re.compile(r'(magnet:\?[^"]+)"')
-		#sizePat = re.compile(r'</td> <td class="files\-size">([0-9A-Z\.]+)</td>')
-		sizePat = re.compile(r'BotInfo"><dt>(?:<p>)?([^<]+)<')
-		patFind = magPat.search(html)
+		pattern = re.compile(r'http://www\.btava\.com/magnet/detail/hash/[A-F0-9]+')
+#		sizePat = re.compile(r'</td> <td class="files\-size">([0-9A-Z\.]+)</td>')
+		sizePat = re.compile(r'Size:([^ ]+)')
+		patFind = pattern.search(html)
 		if (patFind):
-			matchList = magPat.findall(html)
+			matchList = pattern.findall(html)
 			sizeList = sizePat.findall(html)
-			print(matchList)
-			print(sizeList)
 			return matchList, sizeList
-			
+		print('not find')	
 		return None, None
 
 	def getMagnet(urlPath):
@@ -33,8 +30,7 @@ class magnet:
 		return None
 
 	def getAllMagnet(code):
-		List, sizeList = magnet.getUrlList('http://www.btsou.org/web?q=' + code)
-		return List, sizeList
+		List, sizeList = magnet.getUrlList('http://www.btava.com/search/' + code)
 		listFlag = []
 		magList = []
 		if (List != None):
